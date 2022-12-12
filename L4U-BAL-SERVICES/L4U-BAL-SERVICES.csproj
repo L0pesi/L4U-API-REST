@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>L4U_BAL_SERVICES</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\L4U-BOL-MODEL\L4U-BOL-MODEL.csproj" />
+    <ProjectReference Include="..\L4U-DAL-DATA\L4U-DAL-DATA.csproj" />
+  </ItemGroup>
+
+</Project>
