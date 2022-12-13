@@ -13,14 +13,16 @@ namespace L4U_BOL_MODEL.Models
     public class User
     {
         public string Id { get; set; }
-        public string Name { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string Email { get; set; }
-        public string Username { get; set; }
+        public string UserName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string City { get; set; }
 
         [JsonIgnore]
         public string Password { get; set; }
 
-        public DateTime DateOfCreation { get; set; }
         public string Token { get; set; } = string.Empty;
 
         public User()
@@ -32,11 +34,14 @@ namespace L4U_BOL_MODEL.Models
         public User(DataRow dr)
         {
             this.Id = dr["id"].ToString();
-            this.Name = dr["name"].ToString();
+            this.FirstName = dr["firstName"].ToString();
+            this.LastName = dr["lastName"].ToString();
             this.Email = dr["email"].ToString();
-            this.Username = dr["username"].ToString();
-            this.Password = dr["password"].ToString();
-            this.DateOfCreation = DateTime.Parse(dr["dateOfCreation"].ToString());
+            this.UserName = dr["userName"].ToString();
+            this.PhoneNumber = dr["phoneNumber"].ToString();
+            this.City = dr["city"].ToString();
+            this.Password = dr["userPassword"].ToString();
+            //eles ja tinha o public string token em baixo do [JsonIgnore] então nao alterei, mas não sei se tenho de o colocar aqui
         }
     }
 }
