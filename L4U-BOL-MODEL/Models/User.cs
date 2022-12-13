@@ -28,7 +28,7 @@ namespace L4U_BOL_MODEL.Models
 
         public User(object obj)
         { }
-        asdasasdasd
+        //asdasasdasdasdasdads
         public User(DataRow dr)
         {
             this.Id = dr["id"].ToString();
