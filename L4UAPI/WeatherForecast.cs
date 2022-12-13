@@ -8,6 +8,6 @@ namespace L4UAPI
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 
-        public string? Summary { get; set; }
+        public string? Summar { get; set; }
     }
 }
