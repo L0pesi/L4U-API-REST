@@ -17,7 +17,7 @@ namespace L4U_BOL_MODEL.Models
         public string Email { get; set; }
         public string Username { get; set; }
 
-        [JsonIgnore]
+        [JsonIgnore] //teste 
         public string Password { get; set; }
 
         public DateTime DateOfCreation { get; set; }
