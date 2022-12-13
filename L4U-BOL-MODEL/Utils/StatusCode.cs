@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace L4U_BOL_MODEL.Utils
 {
-    internal class StatusCode
+    internal enum StatusCode
     {
+        SUCCESS = 200,
+        CREATED = 201,
+        NOCONTENT = 204,
+        BADREQUEST = 400,
+        UNAUTHORIZED = 401,
+        NOTFOUND = 404,
+        INTERNALSERVERERROR = 500
     }
 }

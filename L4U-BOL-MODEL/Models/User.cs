@@ -20,7 +20,7 @@ namespace L4U_BOL_MODEL.Models
         public string PhoneNumber { get; set; }
         public string City { get; set; }
 
-        [JsonIgnore]
+        [JsonIgnore] //nao entendo bem a funcionalidade deste jsonignore
         public string Password { get; set; }
 
         public string Token { get; set; } = string.Empty;
