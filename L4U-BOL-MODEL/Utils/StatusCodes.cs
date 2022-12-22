@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace L4U_BOL_MODEL.Utils
 {
-    internal enum StatusCode
+    public enum StatusCodes
     {
         SUCCESS = 200,
         CREATED = 201,
