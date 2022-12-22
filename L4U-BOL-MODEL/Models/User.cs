@@ -17,26 +17,12 @@ namespace L4U_BOL_MODEL.Models
         public string Email { get; set; }
         public string Username { get; set; }
 
-        [JsonIgnore]
+        
         public string Password { get; set; }
 
         public DateTime DateOfCreation { get; set; }
         public string Token { get; set; } = string.Empty;
 
-        public User()
-        { }
-
-        public User(object obj)
-        { }
-
-        public User(DataRow dr)
-        {
-            this.Id = dr["id"].ToString();
-            this.Name = dr["name"].ToString();
-            this.Email = dr["email"].ToString();
-            this.Username = dr["username"].ToString();
-            this.Password = dr["password"].ToString();
-            this.DateOfCreation = DateTime.Parse(dr["dateOfCreation"].ToString());
-        }
+       
     }
 }

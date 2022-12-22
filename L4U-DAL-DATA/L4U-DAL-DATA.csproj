@@ -4,8 +4,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>L4U_DAL_DATA</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\L4U-BOL-MODEL\L4U-BOL-MODEL.csproj" />
