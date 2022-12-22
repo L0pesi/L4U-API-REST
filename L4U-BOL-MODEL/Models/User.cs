@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-
+using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 
 namespace L4U_BOL_MODEL.Models
 {
@@ -17,7 +17,6 @@ namespace L4U_BOL_MODEL.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }
-        public string PhoneNumber { get; set; }
         public string City { get; set; }
 
         [JsonIgnore]//não sei se devemos ignorar a password e o token
@@ -38,7 +37,6 @@ namespace L4U_BOL_MODEL.Models
             this.LastName = dr["lastName"].ToString();
             this.Email = dr["email"].ToString();
             this.UserName = dr["userName"].ToString();
-            this.PhoneNumber = dr["phoneNumber"].ToString();
             this.City = dr["city"].ToString();
             this.Password = dr["userPassword"].ToString();
             //eles ja tinha o public string token em baixo do [JsonIgnore] então nao alterei, mas não sei se tenho de o colocar aqui

@@ -11,11 +11,19 @@
 
         public ConfigData()
         {
+            this.Server = "DESKTOP-P4T9S96\\SQLEXPRESS";
+            this.Database = "l4u";
+            this.Username = "sa";
+            this.Password = "1234";
+        }
+
+        /*public ConfigData()
+        {
             this.Server = @"l4userver.database.windows.net";
             this.Database = "L4U-DB";
             this.Username = "supergrupoadmin";
             this.Password = "supergrupo+2022";
-        }
+        }*/
 
         public string GetConnectionString() => ConnString;
 
