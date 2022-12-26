@@ -2,7 +2,9 @@
 using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
 using L4U_BOL_MODEL.Utilities;
+using L4U_WebService.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace L4U_WebService.Controllers
 {
@@ -16,17 +18,26 @@ namespace L4U_WebService.Controllers
     {
 
         /// <summary>
-        /// Application path? 
+        /// Application path 
         /// </summary>
         private string appPath;
 
         /// <summary>
-        /// App setting class? 
+        /// App setting class 
         /// </summary>
+        private readonly AppSettings appSettings;
+
 
         /// <summary>
-        /// Implementação do webHostEnvironment (com as duas declarações anteriores) 
+        /// Constructor
+        /// Implementação do webHostEnvironment (com as duas declarações anteriores)
         /// </summary>
+        /// <param name="webHostEnvironment">Dependecy injection of IWebHostEnvironment interface</param>
+        public UserController(IWebHostEnvironment webHostEnvironment, IOptions<AppSettings> _appSettings)
+        {
+            this.appPath = webHostEnvironment.ContentRootPath;
+            this.appSettings = _appSettings.Value;
+        }
 
 
         [HttpPost]

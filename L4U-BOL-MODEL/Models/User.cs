@@ -23,6 +23,9 @@ namespace L4U_BOL_MODEL.Models
         public DateTime DateOfCreation { get; set; }
         public string Token { get; set; } = string.Empty;
 
-       
+
+
+        //fazer data row?
+
     }
 }

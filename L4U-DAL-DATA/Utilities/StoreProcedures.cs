@@ -15,6 +15,15 @@ namespace L4U_DAL_DATA.Utilities
         public static readonly string DeleteUser = "DeleteUser";
         public static readonly string LoginUser = "LoginUser";
 
+        //Stored procedures for Lockers
+        public static readonly string AddLocker = "AddLocker";
+        public static readonly string GetLocker = "GetLocker";
+        public static readonly string GetAllLockers = "GetAllLockers";
+        public static readonly string UpdateLocker = "UpdateLocker";
+        public static readonly string DeleteLocker = "DeleteLocker";
+
+
+
 
 
     }
