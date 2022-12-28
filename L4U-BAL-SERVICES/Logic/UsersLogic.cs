@@ -1,43 +1,53 @@
-﻿using L4U_BAL_SERVICES.Utils;
 using L4U_BOL_MODEL.Models;
+using L4U_BOL_MODEL.Utilities;
+using L4U_BOL_MODEL.Response;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using L4U_DAL_DATA.Services;
-using L4U_BOL_MODEL.Models.Request;
-using L4U_BOL_MODEL.Models.Response;
-using L4U_BOL_MODEL.Utils;
 
 
 namespace L4U_BAL_SERVICES.Logic
 {
     public class UsersLogic
     {
+
+
         /// <summary>
-        /// This method adds a new productStore to the database
+        /// This method adds a new User to the database
         /// </summary>
-        /// <param name="prod">ProductStore object</param>
+        /// <param name="User">User object</param>
         /// <param name="appPath">Application path</param>
         /// <returns>Response</returns>
-        public static async Task<Response> AddNewUser(User user, string appPath)
+        public static async Task<ResponseFunction> AddNewUser(User user, string appPath)
         {
-            user.Password = Criptography.Encrypt(user.Password);
+           
 
             string result = await UsersService.AddNewUser(user, appPath);
-
-            if (result.Equals(CommonMessages.CREATED))
-                return new Response
+                
+            if (result.Equals(SystemMessages.CREATED))
+                return new ResponseFunction
                 {
                     StatusCode = StatusCodes.CREATED,
-                    Message = CommonMessages.RecordAdded,
+                    Message = SystemMessages.RecordAdded,
                     Data = true
                 };
-            if (result.Equals(CommonMessages.ALLREADYEXISTS))
-                return new Response
+            if (result.Equals(SystemMessages.ALREADYEXISTS))
+                return new ResponseFunction
                 {
                     StatusCode = StatusCodes.BADREQUEST,
-                    Message = CommonMessages.USEREXISTS,
+                    Message = SystemMessages.USEREXISTS,
+
                     Data = false
                 };
             return StandardResponse.Error();
         }
+
+
+
+
 
         /// <summary>
         /// This method deletes a user on the database
@@ -94,5 +104,6 @@ namespace L4U_BAL_SERVICES.Logic
                 Data = null
             };
         }
+
     }
 }
