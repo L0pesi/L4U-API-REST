@@ -37,6 +37,8 @@ namespace L4U_WebService
 
             services.AddScoped<User>();
 
+            services.AddEndpointsApiExplorer();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v0.3", new OpenApiInfo
