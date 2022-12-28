@@ -23,12 +23,14 @@ namespace L4U_DAL_DATA.Services
         /// <returns>List of Lockers or null</returns>
         public static async Task<List<Locker>> GetAll(string appPath)
         {
-         
-            
-            ///???????
+            List<Locker> lockers = (List<Locker>)await GeneralProcedureCall.CallStoredProcedure<Locker>(
+                SqlEnumTypes.GetList,
+                StoreProcedures.GetAllLockers,
+                appPath);
 
-            
+            return lockers;
         }
+
 
     }
 }

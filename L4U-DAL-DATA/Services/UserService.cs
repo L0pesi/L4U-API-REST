@@ -1,10 +1,8 @@
 ﻿using L4U_BOL_MODEL.Models;
-using L4U_BOL_MODEL.Models.Request;
 using L4U_DAL_DATA.Data;
+using L4U_DAL_DATA.Utilities;
 using System.Data;
 using System.Data.SqlClient;
-using L4U_DAL_DATA.Utils;
-using System.Threading.Tasks;
 
 namespace L4U_DAL_DATA.Services
 {
@@ -34,9 +32,9 @@ namespace L4U_DAL_DATA.Services
             p6.Value = user.City;
             p7.Direction = ParameterDirection.Output;
 
-            string result = (string)await GenericProcedureCall.CallStoredProcedure<User>(
-                SqlRequestTypes.Insert,
-                SqlStoredProcedures.AddNewUser,
+            string result = (string)await GeneralProcedureCall.CallStoredProcedure<User>(
+                SqlEnumTypes.Insert,
+                StoreProcedures.AddNewUser,
                 appPath,
                 parameters: new SqlParameter[] { p1, p2, p3, p4, p5, p6, p7 });
             return result;
@@ -52,34 +50,14 @@ namespace L4U_DAL_DATA.Services
         {
             SqlParameter p1 = new SqlParameter("@Uid", SqlDbType.NVarChar, 50);
             p1.Value = userUid;
-            bool result = (bool)await GenericProcedureCall.CallStoredProcedure<User>(
-                SqlRequestTypes.Delete,
-                SqlStoredProcedures.DeleteUser,
+            bool result = (bool)await GeneralProcedureCall.CallStoredProcedure<User>(
+                SqlEnumTypes.Delete,
+                StoreProcedures.DeleteUser,
                 appPath,
                 parameters: new SqlParameter[] { p1 });
 
             return result;
         }
 
-        /// <summary>
-        /// This method checks username and password on the db, in order to perform login
-        /// </summary>
-        /// <param name="user">User's object</param>
-        /// <param name="appPath">Application path</param>
-        /// <returns>Authenticated user</returns>
-        public static async Task<User> LoginUser(UserRequestMin user, string appPath)
-        {
-            SqlParameter p1 = new SqlParameter("@Username", SqlDbType.NVarChar, 50);
-            SqlParameter p2 = new SqlParameter("@Team", SqlDbType.NVarChar, 50);
-            p1.Value = user.Username;
-            p2.Value = user.Team;
-            User result = (User)await GenericProcedureCall.CallStoredProcedure<User>(
-                SqlRequestTypes.GetSingle,
-                SqlStoredProcedures.LoginUser,
-                appPath,
-                parameters: new SqlParameter[] { p1, p2 });
-
-            return result;
-        }
     }
 }

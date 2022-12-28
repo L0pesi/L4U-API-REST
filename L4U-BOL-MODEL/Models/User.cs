@@ -1,12 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
+
 
 namespace L4U_BOL_MODEL.Models
 {

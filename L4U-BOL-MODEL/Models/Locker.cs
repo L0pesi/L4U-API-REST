@@ -21,8 +21,10 @@ namespace L4U_BOL_MODEL.Models
 
         public string LockerType { get; set; }
 
+        public List<Locker> Lockers { get; set; } = null; //lista de cacifos
 
-        
+
+
 
         //fazer data row?
 
