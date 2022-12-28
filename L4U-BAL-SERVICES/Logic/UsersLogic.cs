@@ -55,15 +55,15 @@ namespace L4U_BAL_SERVICES.Logic
         /// <param name="user">User object</param>
         /// <param name="appPath">Application path</param>
         /// <returns>Response</returns>
-        public static async Task<Response> DeleteUser(string uid, string appPath)
+        public static async Task<ResponseFunction> DeleteUser(string uid, string appPath)
         {
             bool b = await UsersService.DeleteUser(uid, appPath);
 
             if (b)
-                return new Response
+                return new ResponseFunction()
                 {
                     StatusCode = StatusCodes.SUCCESS,
-                    Message = CommonMessages.RecordDeleted,
+                    Message = SystemMessages.RecordDeleted,
                     Data = b
                 };
             return StandardResponse.Error();
@@ -75,7 +75,7 @@ namespace L4U_BAL_SERVICES.Logic
         /// <param name="user">User object</param>
         /// <param name="appPath">Application path</param>
         /// <returns>Response</returns>
-        public static async Task<Response> LoginUser(UserRequestMin user, string appPath)
+        /*public static async Task<ResponseFunction> LoginUser(UserRequestMin user, string appPath)
         {
             User authUser = await UsersService.LoginUser(user, appPath);
 
@@ -103,7 +103,7 @@ namespace L4U_BAL_SERVICES.Logic
                 Message = CommonMessages.NoContentMessage,
                 Data = null
             };
-        }
+        }*/
 
     }
 }

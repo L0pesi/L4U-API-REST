@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace L4U_BAL_SERVICES.Utils
+namespace L4U_BAL_SERVICES.Utilities
 {
     public class Criptography
     {

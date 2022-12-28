@@ -11,7 +11,7 @@ namespace L4U_WebService.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class LockerController : ControllerBase
+    public class LockersController : ControllerBase
     {
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace L4U_WebService.Controllers
         /// Implementação do webHostEnvironment (com as duas declarações anteriores)
         /// </summary>
         /// <param name="webHostEnvironment">Dependecy injection of IWebHostEnvironment interface</param>
-        public LockerController(IWebHostEnvironment webHostEnvironment)
+        public LockersController(IWebHostEnvironment webHostEnvironment)
         {
             this.appPath = webHostEnvironment.ContentRootPath;
         }

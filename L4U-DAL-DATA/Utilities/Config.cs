@@ -17,7 +17,7 @@ namespace L4U_DAL_DATA.Utilities
 
         public Config()
         {
-            this.Server = @"l4userver.database.windows.net";
+            this.Server = @"l4u.database.windows.net";
             this.Database = "L4U-DB";
             this.Username = "supergrupoadmin";
             this.Password = "supergrupo+2022";

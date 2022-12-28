@@ -1,9 +1,8 @@
 ﻿using L4U_BAL_SERVICES.Logic;
-using L4U_BOL_MODEL.Models.Request;
-using L4U_BOL_MODEL.Models.Response;
+using L4U_BOL_MODEL.Response;
 using L4U_BOL_MODEL.Models;
-using L4U_BOL_MODEL.Utils;
-using L4U_WebService.Helpers;
+using L4U_BOL_MODEL.Utilities;
+using L4U_WebService.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -32,6 +31,7 @@ namespace L4U_WebService.Controllers
 
         /// <summary>
         /// Constructor
+        /// Implementação do webHostEnvironment (com as duas declarações anteriores)
         /// </summary>
         /// <param name="webHostEnvironment">Dependecy injection of IWebHostEnvironment interface</param>
         public UsersController(IWebHostEnvironment webHostEnvironment, IOptions<AppSettings> _appSettings)
@@ -42,22 +42,23 @@ namespace L4U_WebService.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> AddNewUser([FromBody] User request)
+        public async Task<ResponseFunction> AddNewUser([FromBody] User request)
         {
             if (!ModelState.IsValid)
                 return StandardResponse.InvalidRequestResponse();
             return await UsersLogic.AddNewUser(request, appPath);
         }
 
-        [HttpDelete]
+        /*[HttpDelete]
         [Route("delete")]
-        public async Task<Response> DeleteUser([FromBody] RequestModel request)
+        public async Task<ResponseFunction> DeleteUser([FromBody] RequestModel request)
         {
             if (!ModelState.IsValid)
                 return StandardResponse.InvalidRequestResponse();
             return await UsersLogic.DeleteUser(request.Uid, appPath);
-        }
+        }*/
 
+        /*
         [HttpPost]
         [Route("login")]
         public async Task<Response> Login([FromBody] UserRequestMin request)
@@ -74,7 +75,7 @@ namespace L4U_WebService.Controllers
             AuthUser.Data = temp;
 
             return AuthUser;
-        }
+        }*/
 
         /// <summary>
         /// This method generates the token
@@ -85,7 +86,7 @@ namespace L4U_WebService.Controllers
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(appSettings.SecretPhrase);
+            var key = Encoding.ASCII.GetBytes(appSettings.SecretCode);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
