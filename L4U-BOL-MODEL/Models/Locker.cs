@@ -9,15 +9,15 @@ namespace L4U_BOL_MODEL.Models
 {
     public class Locker
     {
-        //public string Id { get; set; }
+        public string Id { get; set; }
 
-        //public string IdClient { get; set; }
+        public string IdClient { get; set; }
 
         public string PinCode { get; set; }
 
         public string MasterCode { get; set; }
 
-        //public string IdStore { get; set; }
+        public string IdStore { get; set; }
 
         public string LockerType { get; set; }
 
