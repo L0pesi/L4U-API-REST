@@ -16,7 +16,7 @@ namespace L4U_DAL_DATA.Services
         /// </summary>
         /// <param name="appPath">Application path</param>
         /// <returns>List of Stores or null</returns>
-        public static async Task<List<Stores>> GetAll(string appPath)
+        /*public static async Task<List<Stores>> GetAll(string appPath)
         {
             List<Stores> stores = (List<Stores>)await GeneralProcedureCall.CallStoredProcedure<Stores>(
                 SqlEnumTypes.GetList,
@@ -24,6 +24,6 @@ namespace L4U_DAL_DATA.Services
                 appPath);
 
             return stores;
-        }
+        }*/
     }
 }

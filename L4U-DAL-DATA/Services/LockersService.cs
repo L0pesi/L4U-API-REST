@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace L4U_DAL_DATA.Services
 {
-    public class LockerService
+    public class LockersService
     {
         //conexao
         string conexao = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022;";

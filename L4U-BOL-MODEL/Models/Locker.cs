@@ -21,13 +21,5 @@ namespace L4U_BOL_MODEL.Models
 
         public string LockerType { get; set; }
 
-
-
-
-
-        //fazer data row?
-
-
-
     }
 }

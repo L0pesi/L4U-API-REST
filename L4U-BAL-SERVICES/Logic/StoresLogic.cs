@@ -13,12 +13,12 @@ namespace L4U_BAL_SERVICES.Logic
         /// </summary>
         /// <param name="appPath">Application path</param>
         /// <returns>List of lockers</returns>
-        public static async Task<ResponseFunction> GetAllStores(string appPath)
+        /*public static async Task<ResponseFunction> GetAllStores(string appPath)
         {
-            //var lockers = new List<LockersLogic>();
-            List<Stores> storeList = await StoreService.GetAll(appPath);
+            var lockers = new List<LockersLogic>();
+            List<Store> storeList = await StoreService.GetAll(appPath);
             return BuildResponseFromList(storeList);
-        }
+        }*/
 
         /// <summary>
         /// GENÉRICO
