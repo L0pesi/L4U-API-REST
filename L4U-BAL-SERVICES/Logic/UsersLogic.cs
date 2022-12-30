@@ -14,6 +14,42 @@ namespace L4U_BAL_SERVICES.Logic
     public class UsersLogic
     {
 
+        private readonly UsersService _usersService;
+
+        public UsersLogic()
+        {
+            _usersService = new UsersService();
+        }
+
+       
+        /// <summary>
+        /// Metodo para Adicionar um utilizador
+        /// </summary>
+        /// <param name="user"></param>
+        public void AddNewUser(User user)
+        {
+            _usersService.AddNewUser(user);
+        }
+
+
+
+        /// <summary>
+        /// Metodo para Listar todos os utilizadores
+        /// </summary>
+        public List<User> GetUsers
+        {
+            get
+            {
+                return _usersService.GetUsers();
+            }
+        }
+
+
+
+
+        #region Versão com erros - Stored Procedures
+
+        /*
 
         /// <summary>
         /// This method adds a new User to the database
@@ -75,7 +111,7 @@ namespace L4U_BAL_SERVICES.Logic
         /// <param name="user">User object</param>
         /// <param name="appPath">Application path</param>
         /// <returns>Response</returns>
-        /*public static async Task<ResponseFunction> LoginUser(UserRequestMin user, string appPath)
+        public static async Task<ResponseFunction> LoginUser(UserRequestMin user, string appPath)
         {
             User authUser = await UsersService.LoginUser(user, appPath);
 
@@ -103,7 +139,12 @@ namespace L4U_BAL_SERVICES.Logic
                 Message = CommonMessages.NoContentMessage,
                 Data = null
             };
-        }*/
+        }
+
+        */
+        #endregion
+
+
 
     }
 }

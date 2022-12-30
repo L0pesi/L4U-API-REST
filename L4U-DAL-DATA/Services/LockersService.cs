@@ -74,9 +74,6 @@ namespace L4U_DAL_DATA.Services
                 }
             }
 
-
-
-
         }
 
 

@@ -16,7 +16,9 @@ namespace L4U_BAL_SERVICES.Logic
 
         public LockersLogic()
         {
+
             _lockerService = new LockersService();
+
         }
 
         public List<Locker> GetLockers
