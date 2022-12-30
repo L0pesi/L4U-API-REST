@@ -7,21 +7,20 @@ using System.Threading.Tasks;
 
 namespace L4U_BOL_MODEL.Models
 {
-    public class Locker
+    public class Lockers
     {
         public string Id { get; set; }
 
         public string IdClient { get; set; }
 
-        public int PinCode { get; set; }
+        public string PinCode { get; set; }
 
-        public int MasterCode { get; set; }
+        public string MasterCode { get; set; }
 
         public string IdStore { get; set; }
 
         public string LockerType { get; set; }
 
-        public List<Locker> Lockers { get; set; } = null; //lista de cacifos
 
 
 
