@@ -19,6 +19,43 @@ namespace L4U_WebService.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
+
+        private readonly UsersLogic _usersLogic;
+
+        public UsersController()
+        {
+            _usersLogic = new UsersLogic();
+        }
+
+
+        // POST
+        // ADICIONAR NOVO UTILIZADOR
+        // api/<UsersController>
+        [HttpPost]
+        public void Post([FromBody] User user)
+        {
+
+            _usersLogic.AddNewUser(user);
+
+        }
+
+
+        // GET
+        // LISTAR TODOS UTILIZADORES
+        // api/<UsersController>
+        [HttpGet]
+        public IEnumerable<User> Get()
+        {
+            return _usersLogic.GetUsers;
+        }
+
+
+
+        #region Versão com erros - Stored Procedures
+
+        /*
+          
+        
         /// <summary>
         /// Application path
         /// </summary>
@@ -39,26 +76,31 @@ namespace L4U_WebService.Controllers
             this.appPath = webHostEnvironment.ContentRootPath;
             this.appSettings = _appSettings.Value;
         }
-
+        
+          
+          
+         
         [HttpPost]
         [Route("create")]
         public async Task<ResponseFunction> AddNewUser([FromBody] User request)
         {
+
             if (!ModelState.IsValid)
                 return StandardResponse.InvalidRequestResponse();
             return await UsersLogic.AddNewUser(request, appPath);
+
         }
 
-        /*[HttpDelete]
+        [HttpDelete]
         [Route("delete")]
         public async Task<ResponseFunction> DeleteUser([FromBody] RequestModel request)
         {
             if (!ModelState.IsValid)
                 return StandardResponse.InvalidRequestResponse();
             return await UsersLogic.DeleteUser(request.Uid, appPath);
-        }*/
+        }
 
-        /*
+        
         [HttpPost]
         [Route("login")]
         public async Task<Response> Login([FromBody] UserRequestMin request)
@@ -75,7 +117,16 @@ namespace L4U_WebService.Controllers
             AuthUser.Data = temp;
 
             return AuthUser;
-        }*/
+        }
+
+        */
+        #endregion
+
+
+
+        #region Generate Token - Mais tarde
+
+        /*
 
         /// <summary>
         /// This method generates the token
@@ -96,5 +147,12 @@ namespace L4U_WebService.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+
+
+        */
+        #endregion
+
+
+
     }
 }
