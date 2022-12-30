@@ -21,7 +21,7 @@ namespace L4U_BAL_SERVICES.Logic
         public static async Task<ResponseFunction> GetAllLockers(string appPath)
         {
             //var lockers = new List<LockersLogic>();
-            List<Locker> lockerList = await LockerService.GetAll(appPath);
+            List<Locker> lockerList = await LockersService.GetAll(appPath);
             return BuildResponseFromList(lockerList);
         }
 

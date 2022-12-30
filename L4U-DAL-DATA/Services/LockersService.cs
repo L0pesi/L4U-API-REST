@@ -12,7 +12,7 @@ namespace L4U_DAL_DATA.Services
     /// <summary>
     /// This class handles all the requests made to the db related to Lockers
     /// </summary>
-    public static class LockerService
+    public static class LockersService
     {
 
 
