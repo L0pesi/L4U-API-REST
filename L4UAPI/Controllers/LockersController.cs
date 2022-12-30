@@ -19,7 +19,7 @@ namespace L4U_WebService.Controllers
 
         //GET :api/LockerController
         [HttpGet]
-        public IEnumerable<Locker> Get()
+        public IEnumerable<Lockers> Get()
         {
             return _lockersLogic.GetLockers;
         }
@@ -32,7 +32,7 @@ namespace L4U_WebService.Controllers
         }
 
         [HttpPost]
-        public void Post([FromBody] Locker locker)
+        public void Post([FromBody] Lockers locker)
         {
 
             _lockersLogic.AddLocker(locker);

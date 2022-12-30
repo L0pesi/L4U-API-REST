@@ -12,11 +12,11 @@ namespace L4U_BAL_SERVICES.Logic
     public class LockersLogic
     {
 
-        private readonly LockerService _lockerService;
+        private readonly LockersService _lockerService;
 
         public LockersLogic()
         {
-            _lockerService = new LockerService();
+            _lockerService = new LockersService();
         }
 
         public List<Locker> GetLockers
