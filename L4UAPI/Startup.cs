@@ -23,7 +23,7 @@ namespace L4U_WebService
             //services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddControllers();
-            services.AddCors(o => o.AddPolicy("l4uPolicy", builder =>
+            /*services.AddCors(o => o.AddPolicy("l4uPolicy", builder =>
             {
                 //builder.AllowAnyOrigin();
                 builder.WithOrigins("*", "http://localhost:4200");
@@ -31,15 +31,20 @@ namespace L4U_WebService
                 builder.AllowAnyHeader();
                 builder.AllowCredentials();
 
-            }));
+            }));*/
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             services.AddScoped<User>();
 
-            services.AddEndpointsApiExplorer();
+            //services.AddEndpointsApiExplorer();
 
             services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ISI_WebService", Version = "v1" });
+            });
+
+            /*services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v0.3", new OpenApiInfo
                 {
@@ -54,7 +59,7 @@ namespace L4U_WebService
                     },
                 });
 
-            });
+            });*/
 
         }
 
@@ -70,7 +75,7 @@ namespace L4U_WebService
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "L4U API WebService v0.3"));
             }
 
-            app.UseCors("l4uPolicy");
+            //app.UseCors("l4uPolicy");
 
             app.UseMiddleware<JwtMiddleware>();
 

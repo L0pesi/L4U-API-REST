@@ -8,8 +8,6 @@ namespace L4U_DAL_DATA.Utilities
 {
     public class StoreProcedures
     {
-
-
         //Stored procedures for users
         public static readonly string AddNewUser = "AddNewUser";
         public static readonly string DeleteUser = "DeleteUser";
@@ -22,9 +20,11 @@ namespace L4U_DAL_DATA.Utilities
         public static readonly string UpdateLocker = "UpdateLocker";
         public static readonly string DeleteLocker = "DeleteLocker";
 
-
-
-
-
+        //Stored procedures for Lockers
+        public static readonly string AddStore = "AddStore";
+        public static readonly string GetStore = "GetStore";
+        public static readonly string GetAllStores = "GetAllStores";
+        public static readonly string UpdateStore = "UpdateStore";
+        public static readonly string DeleteStore = "DeleteStore";
     }
 }
