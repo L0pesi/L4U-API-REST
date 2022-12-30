@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace L4U_BOL_MODEL.Models
 {
-    public class Lockers
+    public class Locker
     {
         public string Id { get; set; }
 
