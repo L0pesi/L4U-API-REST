@@ -82,7 +82,7 @@ namespace L4U_DAL_DATA.Services
             using (SqlConnection conn = new SqlConnection(conexao))
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("UPDATE INTO stores (id, address, city, district, name) VALUES (@id, @Address, @City, @District, @Name)", conn))
+                using (SqlCommand cmd = new SqlCommand("UPDATE stores SET id = @Id, address = @Address,  city = @City, district = @District,name = @Name", conn))
 
                 {
 

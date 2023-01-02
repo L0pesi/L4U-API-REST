@@ -34,6 +34,11 @@ namespace L4U_BAL_SERVICES.Logic
         {
             _storeService.AddStore(store);
         }
+
+        public void UpdateStores(Store store)
+        {
+            _storeService.UpdateStore(store);
+        }
     }
 }
 

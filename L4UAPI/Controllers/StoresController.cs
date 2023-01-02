@@ -32,6 +32,13 @@ namespace L4U_WebService.Controllers
             _storeLogic.AddStores(store);
         }
 
+        [HttpPut]
+        public void Put([FromBody] Store store)
+        {
+
+            _storeLogic.UpdateStores(store);
+        }
+
         /*
         // PUT api/<StoresController>/5
         [HttpPut("{id}")]
