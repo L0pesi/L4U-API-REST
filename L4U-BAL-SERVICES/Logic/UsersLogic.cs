@@ -44,6 +44,10 @@ namespace L4U_BAL_SERVICES.Logic
             }
         }
 
+        public void UpdateUser(User user)
+        {
+            _usersService.UpdateUser(user);
+        }
 
 
 
