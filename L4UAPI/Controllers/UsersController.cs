@@ -50,6 +50,13 @@ namespace L4U_WebService.Controllers
             return _usersLogic.GetUsers;
         }
 
+        [HttpPut]
+        public void Putt([FromBody] User user)
+        {
+
+            _usersLogic.UpdateUser(user);
+
+        }
 
 
         #region Versão com erros - Stored Procedures

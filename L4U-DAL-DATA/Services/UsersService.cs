@@ -39,8 +39,31 @@ namespace L4U_DAL_DATA.Services
 
                 }
             }
+        }
 
+        public void UpdateUser(User user)
+        {
+            List<User> users = new List<User>();
 
+            using (SqlConnection conn = new SqlConnection(connect))
+            {
+                conn.Open();
+                //using (SqlCommand cmd = new SqlCommand("UPDATE users SET id = @Id, firstName = @FirstName,  lastName = @LastName , email = @Email, password = @Password", conn))
+                using (SqlCommand cmd = new SqlCommand("UPDATE users SET firstName = @FirstName, lastName = @LastName , email = @Email, password = @Password WHERE id = @Id", conn))
+
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@Id",user.Id);
+                    cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+                    cmd.Parameters.AddWithValue("@LastName", user.LastName);
+                    cmd.Parameters.AddWithValue("@Email", user.Email);
+                    cmd.Parameters.AddWithValue("@Password", user.Password);
+
+                    cmd.ExecuteNonQuery();
+
+                }
+            }
         }
 
         /// <summary>
