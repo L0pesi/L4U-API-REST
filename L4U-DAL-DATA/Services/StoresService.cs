@@ -67,13 +67,36 @@ namespace L4U_DAL_DATA.Services
                     cmd.Parameters.AddWithValue("@Address", store.Address);
                     cmd.Parameters.AddWithValue("@City", store.City);
                     cmd.Parameters.AddWithValue("@District", store.District);
-                    cmd.Parameters.AddWithValue("@", store.Name);
+                    cmd.Parameters.AddWithValue("@Name", store.Name);
 
                     cmd.ExecuteNonQuery();
 
                 }
             }
+        }
 
+        public void UpdateStore(Store store)
+        {
+            List<Store> stores = new List<Store>();
+
+            using (SqlConnection conn = new SqlConnection(conexao))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("UPDATE INTO stores (id, address, city, district, name) VALUES (@id, @Address, @City, @District, @Name)", conn))
+
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@Id", store.Id);
+                    cmd.Parameters.AddWithValue("@Address", store.Address);
+                    cmd.Parameters.AddWithValue("@City", store.City);
+                    cmd.Parameters.AddWithValue("@District", store.District);
+                    cmd.Parameters.AddWithValue("@Name", store.Name);
+
+                    cmd.ExecuteNonQuery();
+
+                }
+            }
         }
     }
 }
