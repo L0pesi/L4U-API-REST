@@ -1,7 +1,9 @@
 ﻿using L4U_BAL_SERVICES.Logic;
 using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
+using L4U_BOL_MODEL.Utilities;
 using L4U_DAL_DATA.Services;
+using L4U_DAL_DATA.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 
@@ -13,6 +15,7 @@ namespace L4U_WebService.Controllers
     [ApiController]
     public class StoresController : ControllerBase
     {
+   
 
         private readonly IConfiguration _configuration;
 
@@ -33,6 +36,21 @@ namespace L4U_WebService.Controllers
                 return StatusCode((int)response.StatusCode);
             }
             return new JsonResult(response);
+        }
+        /// <summary>
+        /// This controller method updates a given product store object
+        /// </summary>
+        /// <param name="request">Product store object</param>
+        /// <returns>Response</returns>
+        [HttpPut]
+        [Route("update")]
+        public async Task<ResponseFunction> UpdateStore(Store request)
+        {
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await StoresLogic.UpdateStore(request, cs);
+            if (!ModelState.IsValid)
+                return StandardResponse.InvalidRequestResponse();
+            return await StoresLogic.UpdateStore(request, cs);
         }
 
         /*[HttpPut]
@@ -70,11 +88,11 @@ namespace L4U_WebService.Controllers
             }
         }*/
 
-       /* [HttpDelete]
-        public void Delete([FromBody] Store store)
-        {
-            _storeLogic.DeleteStore(store);
-        }*/
+        /* [HttpDelete]
+         public void Delete([FromBody] Store store)
+         {
+             _storeLogic.DeleteStore(store);
+         }*/
 
         /*
         // PUT api/<StoresController>/5

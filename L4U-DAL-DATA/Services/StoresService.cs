@@ -6,14 +6,12 @@ namespace L4U_DAL_DATA.Services
 {
     public class StoresService
     {
-        //conexao
-        string conexao = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022;";
 
         public List<Store> GetAllStores()
         {
             List<Store> stores = new List<Store>();
 
-            using (SqlConnection conn = new SqlConnection(conexao))
+            using (SqlConnection conn = new SqlConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("SELECT * FROM stores", conn))
@@ -44,7 +42,7 @@ namespace L4U_DAL_DATA.Services
 
 
 
-            public static async Task<bool> AddNewStore(Store store, string connectString)
+        public static async Task<bool> AddNewStore(Store store, string connectString)
         {
 
             try
@@ -62,7 +60,7 @@ namespace L4U_DAL_DATA.Services
                         //cmd.CommandType = CommandType.Text;
 
                         cmd.Connection = conn;
-                
+
                         cmd.Parameters.Add("@Address", SqlDbType.NVarChar).Value = store.Address;
                         cmd.Parameters.Add("@City", SqlDbType.NVarChar).Value = store.City;
                         cmd.Parameters.Add("@District", SqlDbType.NVarChar).Value = store.District;
@@ -82,6 +80,79 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+        public static async Task<bool> UpdateStore(Store store, string connectString)
+        {
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    //conn.Open();
+                    string addStore = "UPDATE stores SET id = @Id , address = @Address,  city = @City, district = @District,name = @Name WHERE id = @Id";
+                    using (SqlCommand cmd = new SqlCommand(addStore))
+                    {
+
+                        //cmd.CommandType = CommandType.Text;
+
+                        cmd.Connection = conn;
+
+                        cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
+                        cmd.Parameters.Add("@Address", SqlDbType.NVarChar, 50).Value = store.Address;
+                        cmd.Parameters.Add("@City", SqlDbType.NVarChar, 50).Value = store.City;
+                        cmd.Parameters.Add("@District", SqlDbType.NVarChar, 50).Value = store.District;
+                        cmd.Parameters.Add("@Name", SqlDbType.NVarChar, 50).Value = store.Name;
+
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        conn.Close();
+                        return result.Equals(1);
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public static async Task<bool> DeleteStore(Store store, string connectString)
+        {
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    //conn.Open();
+                    string addStore = "UPDATE stores SET id = @Id , address = @Address,  city = @City, district = @District,name = @Name WHERE id = @Id";
+                    using (SqlCommand cmd = new SqlCommand(addStore))
+                    {
+
+                        //cmd.CommandType = CommandType.Text;
+
+                        cmd.Connection = conn;
+
+                        cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
+                        cmd.Parameters.Add("@Address", SqlDbType.NVarChar, 50).Value = store.Address;
+                        cmd.Parameters.Add("@City", SqlDbType.NVarChar, 50).Value = store.City;
+                        cmd.Parameters.Add("@District", SqlDbType.NVarChar, 50).Value = store.District;
+                        cmd.Parameters.Add("@Name", SqlDbType.NVarChar, 50).Value = store.Name;
+
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        conn.Close();
+                        return result.Equals(1);
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        /*
         public void UpdateStore(Store store)
         {
             List<Store> stores = new List<Store>();
@@ -105,10 +176,12 @@ namespace L4U_DAL_DATA.Services
                 }
             }
         }
+        */
+
 
         public void DeleteStore(Store store)
         {
-            using (SqlConnection conn = new SqlConnection(conexao))
+            using (SqlConnection conn = new SqlConnection())
             {
                 conn.Open();
 

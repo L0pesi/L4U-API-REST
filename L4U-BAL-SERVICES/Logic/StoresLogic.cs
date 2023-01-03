@@ -8,6 +8,7 @@ using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
 using L4U_BOL_MODEL.Utilities;
 using L4U_DAL_DATA.Services;
+using L4U_DAL_DATA.Utilities;
 
 namespace L4U_BAL_SERVICES.Logic
 {
@@ -63,10 +64,20 @@ namespace L4U_BAL_SERVICES.Logic
             return response;
         }
 
-        public void UpdateStores(Store store)
+        public static async Task<ResponseFunction> UpdateStore(Store store, string connectString)
         {
-            _storeService.UpdateStore(store);
+            bool b = await StoresService.UpdateStore(store, connectString);
+
+            if (b)
+                return new ResponseFunction
+                {
+                    StatusCode = StatusCodes.SUCCESS,
+                    Message = SystemMessages.RecordUpdated,
+                    Data = b
+                };
+            return StandardResponse.Error();
         }
+ 
 
         public void DeleteStore(Store store)
         {
