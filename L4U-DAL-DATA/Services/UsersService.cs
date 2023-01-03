@@ -44,7 +44,7 @@ namespace L4U_DAL_DATA.Services
         }*/
 
 
-        public static async Task<Boolean> AddNewUser(string connectString, User user)
+        public static async Task<bool> AddNewUser(User user, string connectString)
         {
             /*
             List<User> users = new List<User>();
@@ -73,7 +73,10 @@ namespace L4U_DAL_DATA.Services
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
                     //conn.Open();
-                    string addUser = "INSERT INTO Users (FirstName, LastName, Email, Username, City) VALUES (@FirstName,@LastName,@Email,@Username,@City)";
+                    string addUser = "INSERT INTO Users " +
+                        "(FirstName, LastName, Email, Password) " + //Username, City) " +
+                        "VALUES " +
+                        "(@FirstName,@LastName,@Email,@Password)";
                     using (SqlCommand cmd = new SqlCommand(addUser))
                     {
 
@@ -92,16 +95,50 @@ namespace L4U_DAL_DATA.Services
                         cmd.Parameters.Add("@Password", SqlDbType.NVarChar).Value = user.Password;
 
                         conn.Open();
-                        cmd.ExecuteNonQuery();
+                        int result = cmd.ExecuteNonQuery();
                         conn.Close();
-                        return true;
+                        return result.Equals(1);
 
                     }
                 }
             }
             catch (Exception e)
             {
-                throw;
+                return false;
+            }
+        }
+        public static async Task<User> Authenticate(UserAuth user, string connectString)
+        {
+            User authUser = new User();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    //conn.Open();
+                    string addUser = " SELECT * FROM users  " +
+                                     " WHERE " +
+                                     " email = @Email AND[password] = @Pass " +
+                                     " AND isActive = 1";
+                    using (SqlCommand cmd = new SqlCommand(addUser))
+                    {
+                        cmd.CommandTimeout = 120;
+                       
+                        cmd.Connection = conn;
+                        
+                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 50).Value = user.Email;
+                        cmd.Parameters.Add("@Pass", SqlDbType.NVarChar, 50).Value = user.Password;
+                        
+                        conn.Open();
+                        authUser = (User) await cmd.ExecuteScalarAsync();
+                        conn.Close();
+                        return authUser;
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
             }
         }
 

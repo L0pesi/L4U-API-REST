@@ -19,7 +19,7 @@ namespace L4U_API_SOAP.Services
         /// Listar todos os usuários
         /// </summary>
         /// <returns></returns>
-        public List<User> GetAllUsers()
+       /* public List<User> GetAllUsers()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace L4U_API_SOAP.Services
 
                 return null;
             }
-        }
+        }*/
 
 
         //conexao sem uso dos Stored Procedures
@@ -48,17 +48,20 @@ namespace L4U_API_SOAP.Services
         /// </summary>
         /// <param name="User"></param>
         /// <returns></returns>
-        public bool AddNewUtilizador(User User)
+        public bool AddNewUtilizador(User user)
         {
 
-            if (User == null) return false; //checks if obj is null
+            if (user == null || string.IsNullOrEmpty(user.UserName)) return false; //checks if obj is null
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
                     //conn.Open();
-                    string addUser = "INSERT INTO Users (FirstName, LastName, Email, Username, City) VALUES (@FirstName,@LastName,@Email,@Username,@City)";
+                    string addUser = "INSERT INTO Users " +
+                        "(FirstName, LastName, Email, Username, City) " +
+                        "VALUES " +
+                        "(@FirstName,@LastName,@Email,@Username,@City)";
                     using (SqlCommand cmd = new SqlCommand(addUser))
                     {
 
@@ -71,15 +74,16 @@ namespace L4U_API_SOAP.Services
                         cmd.Parameters.AddWithValue("@Email", user.Email);
                         cmd.Parameters.AddWithValue("@Password", user.Password);
                         */
-                        cmd.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value = User.FirstName;
-                        cmd.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = User.LastName;
-                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = User.Email;
-                        cmd.Parameters.Add("@Password", SqlDbType.NVarChar).Value = User.Password;
+                        cmd.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value = user.FirstName;
+                        cmd.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = user.LastName;
+                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = user.Email;
+                        cmd.Parameters.Add("@Password", SqlDbType.NVarChar).Value = user.Password;
 
                         conn.Open();
-                        cmd.ExecuteNonQuery();
+                        int result = cmd.ExecuteNonQuery();
                         conn.Close();
-                        return true;
+
+                        return result.Equals(1);
 
                     }
                 }
@@ -93,9 +97,9 @@ namespace L4U_API_SOAP.Services
 
         }
 
-
-
-
-
+        public List<User> GetAllUsers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

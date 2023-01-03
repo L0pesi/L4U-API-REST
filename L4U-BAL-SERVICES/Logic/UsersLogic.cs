@@ -38,28 +38,72 @@ namespace L4U_BAL_SERVICES.Logic
         public static async Task<ResponseFunction> AddNewUser(User user, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);
+            if (!user.IsValid()) throw new Exception("Propriedades não intanciadas");
 
             ResponseFunction response = new ResponseFunction();
             try
             {
-                if (await UsersService.AddNewUser(connectString, user))
+                if (await UsersService.AddNewUser(user, connectString))
                 {
                     response.StatusCode = StatusCodes.CREATED;
                     response.Message = SystemMessages.RecordAdded;
                     //response.Data = true;
+                }
+                else
+                {
+                    response.StatusCode = StatusCodes.INTERNALSERVERERROR;
+                    response.Message = SystemMessages.ErrorMessage;
                 }
             }
             catch (Exception e)
             {
                 response.StatusCode = StatusCodes.BADREQUEST;
                 //response.Message = SystemMessages.USEREXISTS;
-                response.Message = SystemMessages.BadRequestMessage;
+                response.Message = e.Message ?? SystemMessages.BadRequestMessage;
                 //response.Data = false;
                 throw;
             }
             return response;
         }
 
+
+        public static async Task<ResponseFunction> AuthenticateUser(UserAuth user, string connectString)
+        {
+            if (string.IsNullOrEmpty(user.Email))
+                throw new Exception("Email não fornecido");
+            if (string.IsNullOrEmpty(user.Password))
+                throw new Exception("Password não fornecida");
+
+
+            ResponseFunction response = new ResponseFunction();
+            try
+            {
+                User userAuth = await UsersService.Authenticate(user, connectString);
+
+                if (userAuth != null)
+                {
+                    userAuth.Password = string.Empty;
+
+                    response.StatusCode = StatusCodes.SUCCESS;
+                    response.Message = SystemMessages.USEREXISTS;
+                    response.Data = userAuth;
+                }
+                else
+                {
+                    response.StatusCode = StatusCodes.INTERNALSERVERERROR;
+                    response.Message = SystemMessages.ErrorMessage;
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = StatusCodes.BADREQUEST;
+                //response.Message = SystemMessages.USEREXISTS;
+                response.Message = e.Message ?? SystemMessages.BadRequestMessage;
+                //response.Data = false;
+                throw;
+            }
+            return response;
+        }
 
 
         /*

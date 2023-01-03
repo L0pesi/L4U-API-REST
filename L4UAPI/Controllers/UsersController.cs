@@ -38,14 +38,31 @@ namespace L4U_WebService.Controllers
         {
             //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
             string cs = _configuration.GetConnectionString("conectorDb");
-            ResponseFunction response = await UsersLogic.AddNewUser(cs, user);
+            ResponseFunction response = await UsersLogic.AddNewUser(user, cs);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
             {
                 return StatusCode((int)response.StatusCode);
             }
             return new JsonResult(response);
         }
-        
+
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> AuthenticateMe(UserAuth user)
+        {
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await UsersLogic.AuthenticateUser(user, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
+
+        //inativar user => definir o bit isActive = 0
+
+        //Login => WHERE isActive = 1
+
         /*
         // POST
         // ADICIONAR NOVO UTILIZADOR
