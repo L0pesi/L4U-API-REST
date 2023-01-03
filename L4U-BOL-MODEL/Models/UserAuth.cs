@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,12 @@ namespace L4U_BOL_MODEL.Models
         public UserAuth()
         {
 
+        }
+
+        public UserAuth(DataRow dr)
+        {
+            this.Email = dr["email"].ToString();
+            this.Password = dr["password"].ToString();
         }
     }
 }

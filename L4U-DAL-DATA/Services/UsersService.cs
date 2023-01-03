@@ -46,28 +46,7 @@ namespace L4U_DAL_DATA.Services
 
         public static async Task<bool> AddNewUser(User user, string connectString)
         {
-            /*
-            List<User> users = new List<User>();
-
-            using (SqlConnection conn = new SqlConnection(ConnString))
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO Users (FirstName, LastName, Email, Username, City) VALUES (@FirstName,@LastName,@Email,@Username,@City)", conn))
-                {
-
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
-                    cmd.Parameters.AddWithValue("@LastName", user.LastName);
-                    cmd.Parameters.AddWithValue("@Email", user.Email);
-                    cmd.Parameters.AddWithValue("@Username", user.UserName);
-                    cmd.Parameters.AddWithValue("@City", user.City);
-
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-                    return true;
-
-                }
-            }*/
+         
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
