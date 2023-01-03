@@ -17,6 +17,12 @@ namespace L4U_BOL_MODEL.Models
 
         public string Token { get; set; } = string.Empty;
 
+        public User()
+        { }
+
+        
+        public User(object obj)
+        { }
 
         //fazer data row?
 

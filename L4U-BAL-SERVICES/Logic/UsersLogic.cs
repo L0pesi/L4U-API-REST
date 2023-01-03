@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using L4U_DAL_DATA.Services;
+using L4U_DAL_DATA.Utilities;
+
 
 
 namespace L4U_BAL_SERVICES.Logic
@@ -21,7 +23,9 @@ namespace L4U_BAL_SERVICES.Logic
             _usersService = new UsersService();
         }
 
-       
+        string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+
+        /*
         /// <summary>
         /// Metodo para Adicionar um utilizador
         /// </summary>
@@ -29,9 +33,33 @@ namespace L4U_BAL_SERVICES.Logic
         public void AddNewUser(User user)
         {
             _usersService.AddNewUser(user);
+        }*/
+
+        public static async Task<ResponseFunction> AddNewUser(User user, string connectString)
+        {
+            //string result = await UsersService.AddNewUser(user, connectString);
+            ResponseFunction response = new ResponseFunction();
+            try
+            {
+                if (await UsersService.AddNewUser(connectString, user))
+                {
+                    response.StatusCode = StatusCodes.CREATED;
+                    response.Message = SystemMessages.RecordAdded;
+                    //response.Data = true;
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = StatusCodes.BADREQUEST;
+                //response.Message = SystemMessages.USEREXISTS;
+                response.Message = SystemMessages.BadRequestMessage;
+                //response.Data = false;
+                throw;
+            }
+            return response;
         }
 
-
+        /*
 
         /// <summary>
         /// Metodo para Listar todos os utilizadores
@@ -145,10 +173,10 @@ namespace L4U_BAL_SERVICES.Logic
             };
         }
 
-        */
+        
         #endregion
-
-
+        */
+        
 
     }
 }

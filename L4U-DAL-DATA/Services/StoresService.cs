@@ -1,13 +1,6 @@
 ﻿using L4U_BOL_MODEL.Models;
-using L4U_DAL_DATA.Data;
-using L4U_DAL_DATA.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace L4U_DAL_DATA.Services
 {
@@ -96,6 +89,33 @@ namespace L4U_DAL_DATA.Services
                     cmd.ExecuteNonQuery();
 
                 }
+            }
+        }
+
+        public void DeleteStore(Store store)
+        {
+            using (SqlConnection conn = new SqlConnection(conexao))
+            {
+                conn.Open();
+
+                List<Store> stores = new List<Store>();
+                string deleteSql = "DELETE FROM stores WHERE id = @Id";
+                SqlCommand deleteCommand = new SqlCommand(deleteSql, conn);
+                deleteCommand.Parameters.AddWithValue("@Id", store.Id);
+                conn.Close();
+
+                /*
+                int rowsAffected = deleteCommand.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    return Ok("Successfully deleted the user with ID: " + store.Id);
+                }
+                else
+                {
+                    return NotFound("No user found with ID: " + store.Id);
+                }
+                */
             }
         }
     }

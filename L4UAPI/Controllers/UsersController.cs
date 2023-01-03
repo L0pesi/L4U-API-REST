@@ -3,6 +3,7 @@ using L4U_BOL_MODEL.Response;
 using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Utilities;
 using L4U_WebService.Utilities;
+using L4U_DAL_DATA.Utilities;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace L4U_WebService.Controllers
 {
@@ -28,7 +30,17 @@ namespace L4U_WebService.Controllers
             _usersLogic = new UsersLogic();
         }
 
-
+        //[Authorize]
+        [HttpPost("AddNewUser")]
+        public async Task<ResponseFunction> AddNewUser(User user, string connectString)
+        {
+            //ResponseFunction response = await UsersLogic.AddNewUser(connectString, user);
+            if (!ModelState.IsValid)
+                return StandardResponse.InvalidRequestResponse();
+            return await UsersLogic.AddNewUser(user, connectString);
+        }
+        
+        /*
         // POST
         // ADICIONAR NOVO UTILIZADOR
         // api/<UsersController>
@@ -39,6 +51,7 @@ namespace L4U_WebService.Controllers
             _usersLogic.AddNewUser(user);
 
         }
+        /*
 
 
         // GET
@@ -127,9 +140,9 @@ namespace L4U_WebService.Controllers
             return AuthUser;
         }
 
-        */
+        
         #endregion
-
+        */
 
 
         #region Generate Token - Mais tarde
