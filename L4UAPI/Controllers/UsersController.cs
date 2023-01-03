@@ -3,6 +3,7 @@ using L4U_BOL_MODEL.Response;
 using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Utilities;
 using L4U_WebService.Utilities;
+using L4U_DAL_DATA.Utilities;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace L4U_WebService.Controllers
 {
@@ -21,14 +23,47 @@ namespace L4U_WebService.Controllers
     public class UsersController : ControllerBase
     {
 
-        private readonly UsersLogic _usersLogic;
+        //private readonly UsersLogic _usersLogic;
 
-        public UsersController()
+        private readonly IConfiguration _configuration;
+
+        public UsersController(IConfiguration configuration)
         {
-            _usersLogic = new UsersLogic();
+            _configuration = configuration;
         }
 
+        //[Authorize]
+        [HttpPost("AddNewUser")]
+        public async Task<IActionResult> AddNewUser(User user)
+        {
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await UsersLogic.AddNewUser(user, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
 
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> AuthenticateMe(UserAuth user)
+        {
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await UsersLogic.AuthenticateUser(user, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
+
+        //inativar user => definir o bit isActive = 0
+
+        //Login => WHERE isActive = 1
+
+        /*
         // POST
         // ADICIONAR NOVO UTILIZADOR
         // api/<UsersController>
@@ -39,6 +74,7 @@ namespace L4U_WebService.Controllers
             _usersLogic.AddNewUser(user);
 
         }
+        /*
 
 
         // GET
@@ -127,9 +163,9 @@ namespace L4U_WebService.Controllers
             return AuthUser;
         }
 
-        */
+        
         #endregion
-
+        */
 
 
         #region Generate Token - Mais tarde

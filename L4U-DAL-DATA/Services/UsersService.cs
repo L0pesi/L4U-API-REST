@@ -8,7 +8,7 @@ namespace L4U_DAL_DATA.Services
     {
 
         //conexao sem uso dos Stored Procedures
-        string connect = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+        string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
 
 
 
@@ -17,12 +17,12 @@ namespace L4U_DAL_DATA.Services
         /// </summary>
         /// <param name="user">User object</param>
         /// <returns>True if succeed, false otherwise</returns>
-        public void AddNewUser(User user)
+        /*public static async Task<String> AddNewUser(string ConnString, User user)
         {
 
             List<User> users = new List<User>();
 
-            using (SqlConnection conn = new SqlConnection(connect))
+            using (SqlConnection conn = new SqlConnection(ConnString))
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("INSERT INTO Users (FirstName, LastName, Email, Username, City) VALUES (@FirstName,@LastName,@Email,@Username,@City)", conn))
@@ -36,11 +36,113 @@ namespace L4U_DAL_DATA.Services
                     cmd.Parameters.AddWithValue("@City", user.City);
 
                     cmd.ExecuteNonQuery();
+                    conn.Close();
+                    return true;
 
                 }
             }
+        }*/
+
+
+        public static async Task<bool> AddNewUser(User user, string connectString)
+        {
+            /*
+            List<User> users = new List<User>();
+
+            using (SqlConnection conn = new SqlConnection(ConnString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO Users (FirstName, LastName, Email, Username, City) VALUES (@FirstName,@LastName,@Email,@Username,@City)", conn))
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+                    cmd.Parameters.AddWithValue("@LastName", user.LastName);
+                    cmd.Parameters.AddWithValue("@Email", user.Email);
+                    cmd.Parameters.AddWithValue("@Username", user.UserName);
+                    cmd.Parameters.AddWithValue("@City", user.City);
+
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                    return true;
+
+                }
+            }*/
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    //conn.Open();
+                    string addUser = "INSERT INTO Users " +
+                        "(FirstName, LastName, Email, Password) " + //Username, City) " +
+                        "VALUES " +
+                        "(@FirstName,@LastName,@Email,@Password)";
+                    using (SqlCommand cmd = new SqlCommand(addUser))
+                    {
+
+                        //cmd.CommandType = CommandType.Text;
+                        
+                        cmd.Connection= conn;
+                        /*
+                        cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+                        cmd.Parameters.AddWithValue("@LastName", user.LastName);
+                        cmd.Parameters.AddWithValue("@Email", user.Email);
+                        cmd.Parameters.AddWithValue("@Password", user.Password);
+                        */
+                        cmd.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value  = user.FirstName;
+                        cmd.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = user.LastName;
+                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = user.Email;
+                        cmd.Parameters.Add("@Password", SqlDbType.NVarChar).Value = user.Password;
+
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        conn.Close();
+                        return result.Equals(1);
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        public static async Task<User> Authenticate(UserAuth user, string connectString)
+        {
+            User authUser = new User();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    //conn.Open();
+                    string addUser = " SELECT * FROM users  " +
+                                     " WHERE " +
+                                     " email = @Email AND[password] = @Pass " +
+                                     " AND isActive = 1";
+                    using (SqlCommand cmd = new SqlCommand(addUser))
+                    {
+                        cmd.CommandTimeout = 120;
+                       
+                        cmd.Connection = conn;
+                        
+                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 50).Value = user.Email;
+                        cmd.Parameters.Add("@Pass", SqlDbType.NVarChar, 50).Value = user.Password;
+                        
+                        conn.Open();
+                        authUser = (User) await cmd.ExecuteScalarAsync();
+                        conn.Close();
+                        return authUser;
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
+        /*
         public void UpdateUser(User user)
         {
             List<User> users = new List<User>();
@@ -54,7 +156,7 @@ namespace L4U_DAL_DATA.Services
                 {
 
                     cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@Id",user.Id);
+                    cmd.Parameters.AddWithValue("@Id", user.Id);
                     cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
                     cmd.Parameters.AddWithValue("@LastName", user.LastName);
                     cmd.Parameters.AddWithValue("@Email", user.Email);
@@ -171,11 +273,11 @@ namespace L4U_DAL_DATA.Services
 
         }
        
-            */
+            
 
         #endregion
 
-
+        */
 
     }
 }

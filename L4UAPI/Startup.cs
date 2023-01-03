@@ -19,25 +19,25 @@ namespace L4U_WebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddMvc();
-            //services.AddSingleton<IConfiguration>(Configuration);
+            services.AddMvc();
+            services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddControllers();
-            /*services.AddCors(o => o.AddPolicy("l4uPolicy", builder =>
+            services.AddCors(o => o.AddPolicy("l4uPolicy", builder =>
             {
-                //builder.AllowAnyOrigin();
+                builder.AllowAnyOrigin();
                 builder.WithOrigins("*", "http://localhost:4200");
                 builder.AllowAnyMethod();
                 builder.AllowAnyHeader();
                 builder.AllowCredentials();
 
-            }));*/
+            }));
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             services.AddScoped<User>();
 
-            //services.AddEndpointsApiExplorer();
+            services.AddEndpointsApiExplorer();
 
             services.AddSwaggerGen(c =>
             {

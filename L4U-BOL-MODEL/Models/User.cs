@@ -1,5 +1,6 @@
+using Microsoft.AspNetCore.Identity;
 using System;
-
+using System.Runtime.CompilerServices;
 
 namespace L4U_BOL_MODEL.Models
 {
@@ -17,9 +18,26 @@ namespace L4U_BOL_MODEL.Models
 
         public string Token { get; set; } = string.Empty;
 
+        public User()
+        { }
+
+        
+        public User(object obj)
+        { }
 
         //fazer data row?
 
+        public bool IsValid()
+        {
+            //if (string.IsNullOrEmpty(this.UserName)) return false;
+            if (string.IsNullOrEmpty(this.Password)) return false;
+            if (string.IsNullOrEmpty(this.FirstName)) return false;
+            if (string.IsNullOrEmpty(this.LastName)) return false;
+            if (string.IsNullOrEmpty(this.Email)) return false;
+            //if (string.IsNullOrEmpty(this.City)) return false;
+
+            return true;
+        }
 
     }
 }

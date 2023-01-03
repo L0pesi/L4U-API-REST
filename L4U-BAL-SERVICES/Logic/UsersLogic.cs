@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using L4U_DAL_DATA.Services;
-
+using L4U_DAL_DATA.Utilities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace L4U_BAL_SERVICES.Logic
 {
@@ -21,7 +22,10 @@ namespace L4U_BAL_SERVICES.Logic
             _usersService = new UsersService();
         }
 
-       
+
+        string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+
+        /*
         /// <summary>
         /// Metodo para Adicionar um utilizador
         /// </summary>
@@ -29,9 +33,80 @@ namespace L4U_BAL_SERVICES.Logic
         public void AddNewUser(User user)
         {
             _usersService.AddNewUser(user);
+        }*/
+
+        public static async Task<ResponseFunction> AddNewUser(User user, string connectString)
+        {
+            //string result = await UsersService.AddNewUser(user, connectString);
+            if (!user.IsValid()) throw new Exception("Propriedades não intanciadas");
+
+            ResponseFunction response = new ResponseFunction();
+            try
+            {
+                if (await UsersService.AddNewUser(user, connectString))
+                {
+                    response.StatusCode = StatusCodes.CREATED;
+                    response.Message = SystemMessages.RecordAdded;
+                    //response.Data = true;
+                }
+                else
+                {
+                    response.StatusCode = StatusCodes.INTERNALSERVERERROR;
+                    response.Message = SystemMessages.ErrorMessage;
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = StatusCodes.BADREQUEST;
+                //response.Message = SystemMessages.USEREXISTS;
+                response.Message = e.Message ?? SystemMessages.BadRequestMessage;
+                //response.Data = false;
+                throw;
+            }
+            return response;
         }
 
 
+        public static async Task<ResponseFunction> AuthenticateUser(UserAuth user, string connectString)
+        {
+            if (string.IsNullOrEmpty(user.Email))
+                throw new Exception("Email não fornecido");
+            if (string.IsNullOrEmpty(user.Password))
+                throw new Exception("Password não fornecida");
+
+
+            ResponseFunction response = new ResponseFunction();
+            try
+            {
+                User userAuth = await UsersService.Authenticate(user, connectString);
+
+                if (userAuth != null)
+                {
+                    userAuth.Password = string.Empty;
+
+                    response.StatusCode = StatusCodes.SUCCESS;
+                    response.Message = SystemMessages.USEREXISTS;
+                    response.Data = userAuth;
+                }
+                else
+                {
+                    response.StatusCode = StatusCodes.INTERNALSERVERERROR;
+                    response.Message = SystemMessages.ErrorMessage;
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = StatusCodes.BADREQUEST;
+                //response.Message = SystemMessages.USEREXISTS;
+                response.Message = e.Message ?? SystemMessages.BadRequestMessage;
+                //response.Data = false;
+                throw;
+            }
+            return response;
+        }
+
+
+        /*
 
         /// <summary>
         /// Metodo para Listar todos os utilizadores
@@ -145,9 +220,9 @@ namespace L4U_BAL_SERVICES.Logic
             };
         }
 
-        */
+        
         #endregion
-
+        */
 
 
     }
