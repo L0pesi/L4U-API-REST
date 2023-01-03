@@ -32,12 +32,15 @@ namespace L4U_WebService.Controllers
 
         //[Authorize]
         [HttpPost("AddNewUser")]
-        public async Task<ResponseFunction> AddNewUser(User user, string connectString)
+        public async Task<IActionResult> AddNewUser(User user)
         {
-            //ResponseFunction response = await UsersLogic.AddNewUser(connectString, user);
-            if (!ModelState.IsValid)
-                return StandardResponse.InvalidRequestResponse();
-            return await UsersLogic.AddNewUser(user, connectString);
+            string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            ResponseFunction response = await UsersLogic.AddNewUser(connectString, user);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
         }
         
         /*
