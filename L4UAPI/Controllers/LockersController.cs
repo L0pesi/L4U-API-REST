@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Options;
 using L4U_BAL_SERVICES.Logic;
 using L4U_BOL_MODEL.Models;
+using L4U_BOL_MODEL.Response;
+using Microsoft.Extensions.Configuration;
 
 namespace L4U_WebService.Controllers
 {
@@ -9,33 +11,42 @@ namespace L4U_WebService.Controllers
     [ApiController]
     public class LockerController : ControllerBase
     {
-        private readonly LockersLogic _lockersLogic;
+        
 
-        public LockerController()
+        private readonly IConfiguration _configuration;
+
+        public LockerController(IConfiguration configuration)
         {
-            _lockersLogic = new LockersLogic();
+            _configuration = configuration;
         }
 
+       
 
-        //GET :api/LockerController
+        /*GET :api/LockerController
         [HttpGet]
         public IEnumerable<Locker> Get()
         {
             return _lockersLogic.GetLockers;
-        }
+        }*/
 
         // GET api/<UsersController>/5
-        [HttpGet("{id}")]
+        /*[HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
-        }
+        }*/
 
-        [HttpPost]
-        public void Post([FromBody] Locker locker)
+        [HttpPost("AddNewLocker")]
+        public async Task<IActionResult> AddNewLocker(Locker locker)
         {
-
-            _lockersLogic.AddLocker(locker);
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await LockersLogic.AddNewLocker(locker, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
         }
 
     }
