@@ -16,6 +16,44 @@ namespace L4U_DAL_DATA.Services
         //conexao
         string conexao = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022;";
 
+        public static async Task<bool> AddNewLocker(Locker locker, string connectString)
+        {
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    //conn.Open();
+                    string addLocker = "INSERT INTO lockers " +
+                        "(pinCode, masterCode, lockerType) " + //Username, City) " +
+                        "VALUES " +
+                        "(@PinCode, @MasterCode, @LockerType)";
+                    using (SqlCommand cmd = new SqlCommand(addLocker))
+                    {
+
+                        //cmd.CommandType = CommandType.Text;
+
+                        cmd.Connection = conn;
+                        cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = locker.PinCode;
+                        cmd.Parameters.Add("@MasterCode", SqlDbType.NVarChar).Value = locker.MasterCode;
+                        cmd.Parameters.Add("@LockerType", SqlDbType.NVarChar).Value = locker.LockerType;
+
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        conn.Close();
+                        return result.Equals(1);
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+
+        
         public List<Locker> GetLockers()
         {
             List<Locker> lockers = new List<Locker>();
@@ -52,7 +90,7 @@ namespace L4U_DAL_DATA.Services
 
 
 
-        public void AddLocker(Locker locker)
+        /*public void AddLocker(Locker locker)
         {
             List<Locker> lockers = new List<Locker>();
 
@@ -76,7 +114,7 @@ namespace L4U_DAL_DATA.Services
                 }
             }
 
-        }
+        }*/
 
 
     }
