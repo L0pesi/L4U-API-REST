@@ -44,27 +44,41 @@ namespace L4U_DAL_DATA.Services
 
 
 
-        public void AddStore(Store store)
+            public static async Task<bool> AddNewStore(Store store, string connectString)
         {
-            List<Store> stores = new List<Store>();
 
-            using (SqlConnection conn = new SqlConnection(conexao))
+            try
             {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO stores (address, city, district, name) VALUES (@Address, @City, @District, @Name)", conn))
-
+                using (SqlConnection conn = new SqlConnection(connectString))
                 {
+                    //conn.Open();
+                    string addStore = "INSERT INTO Stores " +
+                        "(Address, City, District, Name) " + //Username, City) " +
+                        "VALUES " +
+                        "(@Address,@City,@District,@Name)";
+                    using (SqlCommand cmd = new SqlCommand(addStore))
+                    {
 
-                    cmd.CommandType = CommandType.Text;
-                    //cmd.Parameters.AddWithValue("@IdClient", locker.IdClient);
-                    cmd.Parameters.AddWithValue("@Address", store.Address);
-                    cmd.Parameters.AddWithValue("@City", store.City);
-                    cmd.Parameters.AddWithValue("@District", store.District);
-                    cmd.Parameters.AddWithValue("@Name", store.Name);
+                        //cmd.CommandType = CommandType.Text;
 
-                    cmd.ExecuteNonQuery();
+                        cmd.Connection = conn;
+                
+                        cmd.Parameters.Add("@Address", SqlDbType.NVarChar).Value = store.Address;
+                        cmd.Parameters.Add("@City", SqlDbType.NVarChar).Value = store.City;
+                        cmd.Parameters.Add("@District", SqlDbType.NVarChar).Value = store.District;
+                        cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = store.Name;
 
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        conn.Close();
+                        return result.Equals(1);
+
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
 

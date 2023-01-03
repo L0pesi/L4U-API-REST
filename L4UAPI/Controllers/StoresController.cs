@@ -1,5 +1,6 @@
 ﻿using L4U_BAL_SERVICES.Logic;
 using L4U_BOL_MODEL.Models;
+using L4U_BOL_MODEL.Response;
 using L4U_DAL_DATA.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
@@ -12,33 +13,34 @@ namespace L4U_WebService.Controllers
     [ApiController]
     public class StoresController : ControllerBase
     {
-        private readonly StoresLogic _storeLogic;
-        public StoresController()
+
+        private readonly IConfiguration _configuration;
+
+        public StoresController(IConfiguration configuration)
         {
-            _storeLogic = new StoresLogic();
+            _configuration = configuration;
         }
 
-
-        //GET :api/LockerController
-        [HttpGet]
-        public IEnumerable<Store> Get()
+        //[Authorize]
+        [HttpPost("AddNewStore")]
+        public async Task<IActionResult> AddNewStore(Store store)
         {
-            return _storeLogic.GetAll;
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await StoresLogic.AddNewStore(store, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
         }
 
-        [HttpPost]
-        public void Post([FromBody] Store store)
-        {
-
-            _storeLogic.AddStores(store);
-        }
-
-        [HttpPut]
+        /*[HttpPut]
         public void Put([FromBody] Store store)
         {
 
             _storeLogic.UpdateStores(store);
-        }
+        }*/
 
         /*
         [HttpDelete]
@@ -68,11 +70,11 @@ namespace L4U_WebService.Controllers
             }
         }*/
 
-        [HttpDelete]
+       /* [HttpDelete]
         public void Delete([FromBody] Store store)
         {
             _storeLogic.DeleteStore(store);
-        }
+        }*/
 
         /*
         // PUT api/<StoresController>/5
