@@ -1,4 +1,5 @@
 ﻿using L4U_BOL_MODEL.Models;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace L4U_DAL_DATA.Services
@@ -77,10 +78,19 @@ namespace L4U_DAL_DATA.Services
                     {
 
                         //cmd.CommandType = CommandType.Text;
+                        
+                        cmd.Connection= conn;
+                        /*
                         cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
                         cmd.Parameters.AddWithValue("@LastName", user.LastName);
                         cmd.Parameters.AddWithValue("@Email", user.Email);
                         cmd.Parameters.AddWithValue("@Password", user.Password);
+                        */
+                        cmd.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value  = user.FirstName;
+                        cmd.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = user.LastName;
+                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = user.Email;
+                        cmd.Parameters.Add("@Password", SqlDbType.NVarChar).Value = user.Password;
+
                         conn.Open();
                         cmd.ExecuteNonQuery();
                         conn.Close();

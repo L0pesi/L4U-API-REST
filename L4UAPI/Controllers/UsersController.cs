@@ -23,19 +23,22 @@ namespace L4U_WebService.Controllers
     public class UsersController : ControllerBase
     {
 
-        private readonly UsersLogic _usersLogic;
+        //private readonly UsersLogic _usersLogic;
 
-        public UsersController()
+        private readonly IConfiguration _configuration;
+
+        public UsersController(IConfiguration configuration)
         {
-            _usersLogic = new UsersLogic();
+            _configuration = configuration;
         }
 
         //[Authorize]
         [HttpPost("AddNewUser")]
         public async Task<IActionResult> AddNewUser(User user)
         {
-            string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
-            ResponseFunction response = await UsersLogic.AddNewUser(connectString, user);
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await UsersLogic.AddNewUser(cs, user);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
             {
                 return StatusCode((int)response.StatusCode);

@@ -8,8 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using L4U_DAL_DATA.Services;
 using L4U_DAL_DATA.Utilities;
-
-
+using Microsoft.AspNetCore.Mvc;
 
 namespace L4U_BAL_SERVICES.Logic
 {
@@ -22,6 +21,7 @@ namespace L4U_BAL_SERVICES.Logic
         {
             _usersService = new UsersService();
         }
+
 
         string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
 
@@ -38,6 +38,7 @@ namespace L4U_BAL_SERVICES.Logic
         public static async Task<ResponseFunction> AddNewUser(User user, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);
+
             ResponseFunction response = new ResponseFunction();
             try
             {
@@ -58,6 +59,8 @@ namespace L4U_BAL_SERVICES.Logic
             }
             return response;
         }
+
+
 
         /*
 
@@ -176,7 +179,7 @@ namespace L4U_BAL_SERVICES.Logic
         
         #endregion
         */
-        
+
 
     }
 }
