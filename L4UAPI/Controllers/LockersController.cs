@@ -20,22 +20,6 @@ namespace L4U_WebService.Controllers
             _configuration = configuration;
         }
 
-       
-
-        /*GET :api/LockerController
-        [HttpGet]
-        public IEnumerable<Locker> Get()
-        {
-            return _lockersLogic.GetLockers;
-        }*/
-
-        // GET api/<UsersController>/5
-        /*[HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }*/
-
         [HttpPost("AddNewLocker")]
         public async Task<IActionResult> AddNewLocker(Locker locker)
         {
