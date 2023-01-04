@@ -62,7 +62,7 @@ namespace L4U_BAL_SERVICES.Logic
             {
                 User userAuth = await UsersService.Authenticate(user, connectString);
 
-                if (userAuth != null)
+                if (user.Password.Equals(Criptography.Decrypt(userAuth.Password)))
                 {
                     userAuth.Password = string.Empty;
 
