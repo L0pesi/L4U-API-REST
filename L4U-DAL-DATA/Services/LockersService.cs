@@ -1,11 +1,55 @@
 ﻿using L4U_BOL_MODEL.Models;
 using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.SqlTypes;
 using System.Data.SqlClient;
+
 
 namespace L4U_DAL_DATA.Services
 {
     public class LockersService
     {
+        //conexao
+        string conexao = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022;";
+
+        public static async Task<List<Locker>> GetAllLockers(string connectString)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    string GetAllLockers = "SELECT * FROM lockers";
+                    using (SqlCommand cmd = new SqlCommand(GetAllLockers))
+                    {
+                        cmd.Connection = conn;
+                        conn.Open();
+                        // Execute the command and get the data
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        List<Locker> lockers = new List<Locker>();
+                        while (reader.Read())
+                        {
+                            Locker locker = new Locker();
+                            locker.Id = reader.GetString(0);
+                            locker.PinCode = reader.GetString(1);
+                            locker.MasterCode = reader.GetString(2);
+                            locker.LockerType = reader.GetString(3);
+                            lockers.Add(locker);
+                        }
+
+                        return lockers;
+
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         public static async Task<bool> AddNewLocker(Locker locker, string connectString)
         {
 
@@ -41,43 +85,66 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
-
-        
-        public List<Locker> GetLockers()
+        public static async Task<bool> UpdateLocker(Locker locker, string connectString)
         {
-            List<Locker> lockers = new List<Locker>();
+            try
 
-            using (SqlConnection conn = new SqlConnection())
             {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM lockers", conn))
+                using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    cmd.CommandType = CommandType.Text;
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    string updateLocker = "UPDATE lockers SET pinCode = @PinCode, masterCode = @MasterCode ,lockerType = @lockerType WHERE id = @Id";
+                    using (SqlCommand cmd = new SqlCommand(updateLocker))
                     {
-                        if (reader != null)
-                        {
-                            while (reader.Read())
-                            {
-                                var locker = new Locker();
-                                //locker.IdClient = reader["idClient"].ToString();
-                                locker.PinCode = reader["pinCode"].ToString();
-                                locker.MasterCode = reader["masterCode"].ToString();
-                                locker.LockerType = reader["lockerType"].ToString();
-                                //locker.IdStore = reader["idStore"].ToString();
 
-                                lockers.Add(locker);
-                            }
-                        }
+                        //cmd.CommandType = CommandType.Text;
+
+                        cmd.Connection = conn;
+                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar).Value = locker.Id;
+                        cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = locker.PinCode;
+                        cmd.Parameters.Add("@MasterCode", SqlDbType.NVarChar).Value = locker.MasterCode;
+                        cmd.Parameters.Add("@LockerType", SqlDbType.NVarChar).Value = locker.LockerType;
+
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        conn.Close();
+                        return result.Equals(1);
+
                     }
-
                 }
             }
-
-            return lockers;
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
+        public static async Task<bool> DeleteLocker(Locker locker, string connectString)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    string updateLocker = "Delete from lockers where id=@Id";
+                    using (SqlCommand cmd = new SqlCommand(updateLocker))
+                    {
 
+                        //cmd.CommandType = CommandType.Text;
+
+                        cmd.Connection = conn;
+                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar).Value = locker.Id;
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        conn.Close();
+                        return result.Equals(1);
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
 
         /*public void AddLocker(Locker locker)
         {

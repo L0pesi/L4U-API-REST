@@ -55,6 +55,33 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+        [HttpDelete("DeleteUser")]
+        public async Task<IActionResult> DeleteUser(User user)
+        {
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await UsersLogic.DeleteUser(user, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
+
+
+        [HttpPut("UpdateUser")]
+        public async Task<IActionResult> UpdateUser(User user)
+        {
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await UsersLogic.UpdateUser(user, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
+
         [HttpGet]
         [Route("GetAllUsers")]
         public async Task<ResponseFunction> GetAllUsers()

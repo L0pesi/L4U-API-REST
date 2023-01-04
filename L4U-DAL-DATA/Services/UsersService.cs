@@ -122,6 +122,67 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+        public static async Task<bool> UpdateUser(User user, string connectString)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    string updateUser = "UPDATE users SET firstName = @FirstName, lastName = @LastName ,email = @Email, password = @Password WHERE id = @Id";
+                    using (SqlCommand cmd = new SqlCommand(updateUser))
+                    {
+
+                        //cmd.CommandType = CommandType.Text;
+
+                        cmd.Connection = conn;
+                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar).Value = user.Id;
+                        cmd.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value = user.FirstName;
+                        cmd.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = user.LastName;
+                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = user.Email;
+                        cmd.Parameters.Add("@Password", SqlDbType.NVarChar).Value = user.Password;
+
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        conn.Close();
+                        return result.Equals(1);
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public static async Task<bool> DeleteUser(User user, string connectString)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    string deleteUser = "Delete from users where id=@Id";
+                    using (SqlCommand cmd = new SqlCommand(deleteUser))
+                    {
+
+                        //cmd.CommandType = CommandType.Text;
+
+                        cmd.Connection = conn;
+                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar).Value = user.Id;
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        conn.Close();
+                        return result.Equals(1);
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
         /*
         public void UpdateUser(User user)
         {

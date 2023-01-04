@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using L4U_DAL_DATA.Services;
 using L4U_DAL_DATA.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using L4U_BAL_SERVICES.Utilities;
 
 namespace L4U_BAL_SERVICES.Logic
 {
@@ -19,8 +20,8 @@ namespace L4U_BAL_SERVICES.Logic
         public static async Task<ResponseFunction> AddNewUser(User user, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);
-            if (!user.IsValid()) throw new Exception("Propriedades n„o instanciadas");
-
+            if (!user.IsValid()) throw new Exception("Propriedades n√£o intanciadas");
+            user.Password = Criptography.Encrypt(user.Password);
             ResponseFunction response = new ResponseFunction();
             try
             {
@@ -51,9 +52,9 @@ namespace L4U_BAL_SERVICES.Logic
         public static async Task<ResponseFunction> AuthenticateUser(UserAuth user, string connectString)
         {
             if (string.IsNullOrEmpty(user.Email))
-                throw new Exception("Email n„o fornecido");
+                throw new Exception("Email n√£o fornecido");
             if (string.IsNullOrEmpty(user.Password))
-                throw new Exception("Password n„o fornecida");
+                throw new Exception("Password n√£o fornecida");
 
 
             ResponseFunction response = new ResponseFunction();
@@ -85,6 +86,41 @@ namespace L4U_BAL_SERVICES.Logic
             }
             return response;
         }
+
+        public static async Task<ResponseFunction> UpdateUser(User user, string connectString)
+        {
+            //string result = await UsersService.AddNewUser(user, connectString);
+            if (!user.IsValid()) throw new Exception("Propriedades n√£o intanciadas");
+
+            ResponseFunction response = new ResponseFunction();
+            try
+            {
+                if (await UsersService.UpdateUser(user, connectString))
+                {
+                    response.StatusCode = StatusCodes.CREATED;
+                    response.Message = SystemMessages.RecordAdded;
+                    //response.Data = true;
+                }
+                else
+                {
+                    response.StatusCode = StatusCodes.INTERNALSERVERERROR;
+                    response.Message = SystemMessages.ErrorMessage;
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = StatusCodes.BADREQUEST;
+                //response.Message = SystemMessages.USEREXISTS;
+                response.Message = e.Message ?? SystemMessages.BadRequestMessage;
+                //response.Data = false;
+                throw;
+            }
+            return response;
+        }
+
+
+
+
 
         /// <summary>
         /// This method calls the necessary service to get all productStore and based on the response, builds up the response
@@ -118,7 +154,7 @@ namespace L4U_BAL_SERVICES.Logic
                 return new ResponseFunction
                 {
                     StatusCode = StatusCodes.NOCONTENT,
-                    Message = "N„o existem registos",
+                    Message = "N√£o existem registos",
                     Data = null
                 };
             return new ResponseFunction
@@ -127,6 +163,21 @@ namespace L4U_BAL_SERVICES.Logic
                 Message = $"Foram obtidos {list.Count} resultados",
                 Data = list
             };
+        }
+
+
+        public static async Task<ResponseFunction> DeleteUser(User user, string connectString)
+        {
+            bool b = await UsersService.DeleteUser(user, connectString);
+
+            if (b)
+                return new ResponseFunction
+                {
+                    StatusCode = StatusCodes.SUCCESS,
+                    Message = SystemMessages.RecordDeleted,
+                    Data = b
+                };
+            return StandardResponse.Error();
         }
         /*
 
@@ -148,7 +199,7 @@ namespace L4U_BAL_SERVICES.Logic
 
 
 
-        #region Vers„o com erros - Stored Procedures
+        #region Vers√£o com erros - Stored Procedures
 
         /*
 
