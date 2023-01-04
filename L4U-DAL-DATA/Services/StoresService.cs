@@ -7,41 +7,6 @@ namespace L4U_DAL_DATA.Services
     public class StoresService
     {
 
-        public List<Store> GetAllStores()
-        {
-            List<Store> stores = new List<Store>();
-
-            using (SqlConnection conn = new SqlConnection())
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM stores", conn))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader != null)
-                        {
-                            while (reader.Read())
-                            {
-                                var store = new Store();
-                                store.Address = reader["address"].ToString();
-                                store.City = reader["city"].ToString();
-                                store.District = reader["district"].ToString();
-                                store.Name = reader["name"].ToString();
-
-                                stores.Add(store);
-                            }
-                        }
-                    }
-
-                }
-            }
-
-            return stores;
-        }
-
-
-
         public static async Task<bool> AddNewStore(Store store, string connectString)
         {
 
