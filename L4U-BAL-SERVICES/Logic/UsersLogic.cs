@@ -16,30 +16,11 @@ namespace L4U_BAL_SERVICES.Logic
     public class UsersLogic
     {
 
-        private readonly UsersService _usersService;
-
-        public UsersLogic()
-        {
-            _usersService = new UsersService();
-        }
-
-
-        string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
-
-        /*
-        /// <summary>
-        /// Metodo para Adicionar um utilizador
-        /// </summary>
-        /// <param name="user"></param>
-        public void AddNewUser(User user)
-        {
-            _usersService.AddNewUser(user);
-        }*/
-
+        
         public static async Task<ResponseFunction> AddNewUser(User user, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);
-            if (!user.IsValid()) throw new Exception("Propriedades n„o intanciadas");
+            if (!user.IsValid()) throw new Exception("Propriedades n√£o intanciadas");
             user.Password = Criptography.Encrypt(user.Password);
             ResponseFunction response = new ResponseFunction();
             try
@@ -71,9 +52,9 @@ namespace L4U_BAL_SERVICES.Logic
         public static async Task<ResponseFunction> AuthenticateUser(UserAuth user, string connectString)
         {
             if (string.IsNullOrEmpty(user.Email))
-                throw new Exception("Email n„o fornecido");
+                throw new Exception("Email n√£o fornecido");
             if (string.IsNullOrEmpty(user.Password))
-                throw new Exception("Password n„o fornecida");
+                throw new Exception("Password n√£o fornecida");
 
 
             ResponseFunction response = new ResponseFunction();
@@ -109,7 +90,7 @@ namespace L4U_BAL_SERVICES.Logic
         public static async Task<ResponseFunction> UpdateUser(User user, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);
-            if (!user.IsValid()) throw new Exception("Propriedades n„o intanciadas");
+            if (!user.IsValid()) throw new Exception("Propriedades n√£o intanciadas");
 
             ResponseFunction response = new ResponseFunction();
             try
@@ -173,7 +154,7 @@ namespace L4U_BAL_SERVICES.Logic
                 return new ResponseFunction
                 {
                     StatusCode = StatusCodes.NOCONTENT,
-                    Message = "N„o existem registos",
+                    Message = "N√£o existem registos",
                     Data = null
                 };
             return new ResponseFunction
@@ -218,7 +199,7 @@ namespace L4U_BAL_SERVICES.Logic
 
 
 
-        #region Vers„o com erros - Stored Procedures
+        #region Vers√£o com erros - Stored Procedures
 
         /*
 

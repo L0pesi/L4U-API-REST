@@ -23,8 +23,6 @@ namespace L4U_WebService.Controllers
     public class UsersController : ControllerBase
     {
 
-        //private readonly UsersLogic _usersLogic;
-
         private readonly IConfiguration _configuration;
 
         public UsersController(IConfiguration configuration)
@@ -36,7 +34,6 @@ namespace L4U_WebService.Controllers
         [HttpPost("AddNewUser")]
         public async Task<IActionResult> AddNewUser(User user)
         {
-            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
             string cs = _configuration.GetConnectionString("conectorDb");
             ResponseFunction response = await UsersLogic.AddNewUser(user, cs);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
@@ -49,7 +46,6 @@ namespace L4U_WebService.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> AuthenticateMe(UserAuth user)
         {
-            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
             string cs = _configuration.GetConnectionString("conectorDb");
             ResponseFunction response = await UsersLogic.AuthenticateUser(user, cs);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)

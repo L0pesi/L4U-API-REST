@@ -1,7 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Runtime.CompilerServices;
-
 namespace L4U_BOL_MODEL.Models
 {
     public class User
@@ -15,16 +11,30 @@ namespace L4U_BOL_MODEL.Models
 
         //public List<User> users { get; set; } = null;
 
+
         public string Password { get; set; }
 
         public string Token { get; set; } = string.Empty;
 
+        //public List<User> users { get; set; } = null;
+
         public User()
         { }
 
-        
+
+
+        /*public User(string id)
+        {
+            this.Id = id;
+        }*/
+
         public User(object obj)
-        { }
+        {
+            this.Id = obj.ToString();
+
+        }
+
+
 
         //fazer data row?
 
