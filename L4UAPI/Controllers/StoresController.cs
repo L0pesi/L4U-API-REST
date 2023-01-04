@@ -2,10 +2,7 @@
 using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
 using L4U_BOL_MODEL.Utilities;
-using L4U_DAL_DATA.Services;
-using L4U_DAL_DATA.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,11 +21,10 @@ namespace L4U_WebService.Controllers
             _configuration = configuration;
         }
 
-        //[Authorize]
         [HttpPost("AddNewStore")]
         public async Task<IActionResult> AddNewStore(Store store)
         {
-            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+
             string cs = _configuration.GetConnectionString("conectorDb");
             ResponseFunction response = await StoresLogic.AddNewStore(store, cs);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
@@ -37,13 +33,15 @@ namespace L4U_WebService.Controllers
             }
             return new JsonResult(response);
         }
+
+
         /// <summary>
         /// This controller method updates a given product store object
         /// </summary>
         /// <param name="request">Product store object</param>
         /// <returns>Response</returns>
         [HttpPut]
-        [Route("update")]
+        [Route("UpdateStoreById")]
         public async Task<ResponseFunction> UpdateStore(Store request)
         {
             string cs = _configuration.GetConnectionString("conectorDb");
@@ -53,59 +51,25 @@ namespace L4U_WebService.Controllers
             return await StoresLogic.UpdateStore(request, cs);
         }
 
-        /*[HttpPut]
-        public void Put([FromBody] Store store)
+
+        [HttpDelete("DeleteStoreById")]
+        public async Task<IActionResult> DeleteLocker(Store store)
         {
-
-            _storeLogic.UpdateStores(store);
-        }*/
-
-        /*
-        [HttpDelete]
-        public IActionResult Delete(Store store)
-        {
-            string conexao = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022;";
-
-            using (SqlConnection connection = new SqlConnection(conexao))
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await StoresLogic.DeleteStore(store, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
             {
-                connection.Open();
-
-                List<Store> stores = new List<Store>();
-                string deleteSql = "DELETE FROM stores WHERE id = @Id";
-                SqlCommand deleteCommand = new SqlCommand(deleteSql, connection);
-                deleteCommand.Parameters.AddWithValue("@Id", store.Id);
-
-                int rowsAffected = deleteCommand.ExecuteNonQuery();
-
-                if (rowsAffected > 0)
-                {
-                    return Ok("Successfully deleted the user with ID: " + store.Id);
-                }
-                else
-                {
-                    return NotFound("No user found with ID: " + store.Id);
-                }
+                return StatusCode((int)response.StatusCode);
             }
-        }*/
-
-        /* [HttpDelete]
-         public void Delete([FromBody] Store store)
-         {
-             _storeLogic.DeleteStore(store);
-         }*/
-
-        /*
-        // PUT api/<StoresController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+            return new JsonResult(response);
         }
 
-        // DELETE api/<StoresController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpGet]
+        [Route("GetAllUsers")]
+        public async Task<ResponseFunction> GetAllStores()
         {
+            string cs = _configuration.GetConnectionString("conectorDb");
+            return await StoresLogic.GetAllStores(cs);
         }
-        */
     }
 }

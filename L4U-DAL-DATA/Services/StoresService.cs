@@ -1,4 +1,4 @@
-﻿using L4U_BOL_MODEL.Models;
+using L4U_BOL_MODEL.Models;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -7,45 +7,11 @@ namespace L4U_DAL_DATA.Services
     public class StoresService
     {
 
-        public List<Store> GetAllStores()
-        {
-            List<Store> stores = new List<Store>();
-
-            using (SqlConnection conn = new SqlConnection())
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM stores", conn))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader != null)
-                        {
-                            while (reader.Read())
-                            {
-                                var store = new Store();
-                                store.Address = reader["address"].ToString();
-                                store.City = reader["city"].ToString();
-                                store.District = reader["district"].ToString();
-                                store.Name = reader["name"].ToString();
-
-                                stores.Add(store);
-                            }
-                        }
-                    }
-
-                }
-            }
-
-            return stores;
-        }
-
-
-
         public static async Task<bool> AddNewStore(Store store, string connectString)
         {
 
             try
+
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
@@ -56,8 +22,6 @@ namespace L4U_DAL_DATA.Services
                         "(@Address,@City,@District,@Name)";
                     using (SqlCommand cmd = new SqlCommand(addStore))
                     {
-
-                        //cmd.CommandType = CommandType.Text;
 
                         cmd.Connection = conn;
 
@@ -81,11 +45,13 @@ namespace L4U_DAL_DATA.Services
         }
 
         public static async Task<bool> UpdateStore(Store store, string connectString)
+
         {
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
+
                 {
                     //conn.Open();
                     string addStore = "UPDATE stores SET id = @Id , address = @Address,  city = @City, district = @District,name = @Name WHERE id = @Id";
@@ -96,7 +62,7 @@ namespace L4U_DAL_DATA.Services
 
                         cmd.Connection = conn;
 
-                        cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
+       cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
                         cmd.Parameters.Add("@Address", SqlDbType.NVarChar, 50).Value = store.Address;
                         cmd.Parameters.Add("@City", SqlDbType.NVarChar, 50).Value = store.City;
                         cmd.Parameters.Add("@District", SqlDbType.NVarChar, 50).Value = store.District;
@@ -118,26 +84,17 @@ namespace L4U_DAL_DATA.Services
 
         public static async Task<bool> DeleteStore(Store store, string connectString)
         {
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    //conn.Open();
-                    string addStore = "UPDATE stores SET id = @Id , address = @Address,  city = @City, district = @District,name = @Name WHERE id = @Id";
-                    using (SqlCommand cmd = new SqlCommand(addStore))
+                    string updateLocker = "Delete from stores where id=@Id";
+                    using (SqlCommand cmd = new SqlCommand(updateLocker))
                     {
 
-                        //cmd.CommandType = CommandType.Text;
 
                         cmd.Connection = conn;
-
-                        cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
-                        cmd.Parameters.Add("@Address", SqlDbType.NVarChar, 50).Value = store.Address;
-                        cmd.Parameters.Add("@City", SqlDbType.NVarChar, 50).Value = store.City;
-                        cmd.Parameters.Add("@District", SqlDbType.NVarChar, 50).Value = store.District;
-                        cmd.Parameters.Add("@Name", SqlDbType.NVarChar, 50).Value = store.Name;
-
+                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar, 50).Value = store.Id;
                         conn.Open();
                         int result = cmd.ExecuteNonQuery();
                         conn.Close();
@@ -151,58 +108,37 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
-
-        /*
-        public void UpdateStore(Store store)
+        public static async Task<List<Store>> GetAllStores(string connectString)
         {
-            List<Store> stores = new List<Store>();
+            try
 
-            using (SqlConnection conn = new SqlConnection(conexao))
             {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("UPDATE stores SET id = @Id, address = @Address,  city = @City, district = @District,name = @Name WHERE id = @Id", conn))
-
+                using (SqlConnection conn = new SqlConnection(connectString))
                 {
-
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@Id", store.Id);
-                    cmd.Parameters.AddWithValue("@Address", store.Address);
-                    cmd.Parameters.AddWithValue("@City", store.City);
-                    cmd.Parameters.AddWithValue("@District", store.District);
-                    cmd.Parameters.AddWithValue("@Name", store.Name);
-
-                    cmd.ExecuteNonQuery();
-
+                    string getStores = "SELECT * FROM stores";
+                    using (SqlCommand cmd = new SqlCommand(getStores))
+                    {
+                        cmd.Connection = conn;
+                        conn.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        List<Store> stores = new List<Store>();
+                        while (reader.Read())
+                        {
+                            Store store = new Store();
+                            store.Id = reader.GetString(0);
+                            store.Address = reader.GetString(1);
+                            store.City = reader.GetString(2);
+                            store.District = reader.GetString(3);
+                            store.Name = reader.GetString(4);
+                            stores.Add(store);
+                        }
+                        return stores;
+                    }
                 }
             }
-        }
-        */
-
-
-        public void DeleteStore(Store store)
-        {
-            using (SqlConnection conn = new SqlConnection())
+            catch (Exception e)
             {
-                conn.Open();
-
-                List<Store> stores = new List<Store>();
-                string deleteSql = "DELETE FROM stores WHERE id = @Id";
-                SqlCommand deleteCommand = new SqlCommand(deleteSql, conn);
-                deleteCommand.Parameters.AddWithValue("@Id", store.Id);
-                conn.Close();
-
-                /*
-                int rowsAffected = deleteCommand.ExecuteNonQuery();
-
-                if (rowsAffected > 0)
-                {
-                    return Ok("Successfully deleted the user with ID: " + store.Id);
-                }
-                else
-                {
-                    return NotFound("No user found with ID: " + store.Id);
-                }
-                */
+                return null;
             }
         }
     }

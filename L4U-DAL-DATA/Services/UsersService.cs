@@ -7,72 +7,34 @@ namespace L4U_DAL_DATA.Services
     public class UsersService
     {
 
-        //conexao sem uso dos Stored Procedures
-        string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
-
-
-
-        /// <summary>
-        /// This method adds a User to the database
-        /// </summary>
-        /// <param name="user">User object</param>
-        /// <returns>True if succeed, false otherwise</returns>
-        /*public static async Task<String> AddNewUser(string ConnString, User user)
-        {
-
-            List<User> users = new List<User>();
-
-            using (SqlConnection conn = new SqlConnection(ConnString))
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO Users (FirstName, LastName, Email, Username, City) VALUES (@FirstName,@LastName,@Email,@Username,@City)", conn))
-                {
-
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
-                    cmd.Parameters.AddWithValue("@LastName", user.LastName);
-                    cmd.Parameters.AddWithValue("@Email", user.Email);
-                    cmd.Parameters.AddWithValue("@Username", user.UserName);
-                    cmd.Parameters.AddWithValue("@City", user.City);
-
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-                    return true;
-
-                }
-            }
-        }*/
-
         public static async Task<List<User>> GetAllUsers(string connectString)
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectString))
+                SqlConnection conn = new SqlConnection(connectString);
+
+                string updateLocker = "SELECT * FROM users";
+                SqlCommand cmd = new SqlCommand(updateLocker);
+
+
+                cmd.Connection = conn;
+                conn.Open();
+                // Execute the command and get the data
+                SqlDataReader reader = cmd.ExecuteReader();
+                List<User> users = new List<User>();
+                while (reader.Read())
                 {
-                    string updateLocker = "SELECT * FROM users";
-                    using (SqlCommand cmd = new SqlCommand(updateLocker))
-                    {
-                        cmd.Connection = conn;
-                        conn.Open();
-                        // Execute the command and get the data
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        List<User> users = new List<User>();
-                        while (reader.Read())
-                        {
-                            User user = new User();
-                            user.Id = reader.GetString(0);
-                            user.FirstName = reader.GetString(1);
-                            user.LastName = reader.GetString(2);
-                            user.Email = reader.GetString(3);
-                            user.Password = reader.GetString(4);
-                            users.Add(user);
-                        }
-
-                        return users;
-
-
-                    }
+                    User user = new User();
+                    user.Id = reader.GetString(0);
+                    user.FirstName = reader.GetString(1);
+                    user.LastName = reader.GetString(2);
+                    user.Email = reader.GetString(3);
+                    user.Password = reader.GetString(4);
+                    users.Add(user);
                 }
+
+                return users;
+
             }
             catch (Exception e)
             {
@@ -80,10 +42,13 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
-
+        /// <summary>
+        /// This method adds a User to the database
+        /// </summary>
+        /// <param name="user">User object</param>
+        /// <returns>True if succeed, false otherwise</returns>
         public static async Task<bool> AddNewUser(User user, string connectString)
         {
-         
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
@@ -96,16 +61,9 @@ namespace L4U_DAL_DATA.Services
                     using (SqlCommand cmd = new SqlCommand(addUser))
                     {
 
-                        //cmd.CommandType = CommandType.Text;
-                        
-                        cmd.Connection= conn;
-                        /*
-                        cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
-                        cmd.Parameters.AddWithValue("@LastName", user.LastName);
-                        cmd.Parameters.AddWithValue("@Email", user.Email);
-                        cmd.Parameters.AddWithValue("@Password", user.Password);
-                        */
-                        cmd.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value  = user.FirstName;
+                        cmd.Connection = conn;
+
+                        cmd.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value = user.FirstName;
                         cmd.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = user.LastName;
                         cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = user.Email;
                         cmd.Parameters.Add("@Password", SqlDbType.NVarChar).Value = user.Password;
@@ -130,22 +88,28 @@ namespace L4U_DAL_DATA.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    //conn.Open();
+
                     string addUser = " SELECT * FROM users  " +
                                      " WHERE " +
                                      " email = @Email AND[password] = @Pass " +
                                      " AND isActive = 1";
                     using (SqlCommand cmd = new SqlCommand(addUser))
                     {
+                        conn.Open(); //this
+
                         cmd.CommandTimeout = 120;
-                       
+
                         cmd.Connection = conn;
-                        
+
                         cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 50).Value = user.Email;
                         cmd.Parameters.Add("@Pass", SqlDbType.NVarChar, 50).Value = user.Password;
-                        
-                        conn.Open();
-                        authUser = (User) await cmd.ExecuteScalarAsync();
+                        var x = cmd.ExecuteScalarAsync();
+
+                        //conn.Open();
+                        authUser = new User(x);
+                        //Console.WriteLine(cmd.ExecuteScalarAsync());
+                        //MessageBox.Show(x.GetType());
+                        var y = x.GetType();
                         conn.Close();
                         return authUser;
 
