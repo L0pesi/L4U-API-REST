@@ -15,30 +15,11 @@ namespace L4U_BAL_SERVICES.Logic
     public class UsersLogic
     {
 
-        private readonly UsersService _usersService;
-
-        public UsersLogic()
-        {
-            _usersService = new UsersService();
-        }
-
-
-        string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
-
-        /*
-        /// <summary>
-        /// Metodo para Adicionar um utilizador
-        /// </summary>
-        /// <param name="user"></param>
-        public void AddNewUser(User user)
-        {
-            _usersService.AddNewUser(user);
-        }*/
-
+        
         public static async Task<ResponseFunction> AddNewUser(User user, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);
-            if (!user.IsValid()) throw new Exception("Propriedades não intanciadas");
+            if (!user.IsValid()) throw new Exception("Propriedades não instanciadas");
 
             ResponseFunction response = new ResponseFunction();
             try

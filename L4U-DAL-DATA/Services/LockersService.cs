@@ -1,21 +1,11 @@
 ﻿using L4U_BOL_MODEL.Models;
-using L4U_DAL_DATA.Data;
-using L4U_DAL_DATA.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace L4U_DAL_DATA.Services
 {
     public class LockersService
     {
-        //conexao
-        string conexao = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022;";
-
         public static async Task<bool> AddNewLocker(Locker locker, string connectString)
         {
 
@@ -23,7 +13,7 @@ namespace L4U_DAL_DATA.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    //conn.Open();
+
                     string addLocker = "INSERT INTO lockers " +
                         "(pinCode, masterCode, lockerType) " + //Username, City) " +
                         "VALUES " +
@@ -31,7 +21,6 @@ namespace L4U_DAL_DATA.Services
                     using (SqlCommand cmd = new SqlCommand(addLocker))
                     {
 
-                        //cmd.CommandType = CommandType.Text;
 
                         cmd.Connection = conn;
                         cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = locker.PinCode;
@@ -53,12 +42,12 @@ namespace L4U_DAL_DATA.Services
         }
 
 
-        
+
         public List<Locker> GetLockers()
         {
             List<Locker> lockers = new List<Locker>();
 
-            using (SqlConnection conn = new SqlConnection(conexao))
+            using (SqlConnection conn = new SqlConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("SELECT * FROM lockers", conn))
