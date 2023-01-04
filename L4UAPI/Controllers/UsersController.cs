@@ -59,6 +59,14 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+        [HttpGet]
+        [Route("GetAllUsers")]
+        public async Task<ResponseFunction> GetAllUsers()
+        {
+            string cs = _configuration.GetConnectionString("conectorDb");
+            return await UsersLogic.GetAllUsers(cs);
+        }
+
         //inativar user => definir o bit isActive = 0
 
         //Login => WHERE isActive = 1

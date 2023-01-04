@@ -105,7 +105,48 @@ namespace L4U_BAL_SERVICES.Logic
             return response;
         }
 
+        /// <summary>
+        /// This method calls the necessary service to get all productStore and based on the response, builds up the response
+        /// </summary>
+        /// <param name="appPath">Application path</param>
+        /// <returns>List of products</returns>
+        public static async Task<ResponseFunction> GetAllUsers(string connectString)
+        {
+            List<User> pList = await UsersService.GetAllUsers(connectString);
+            //string result = await UsersService.AddNewUser(user, connectString);
 
+            return BuildReponseFromList(pList);
+        }
+
+        /// <summary>
+        /// This is a generic method to build the response object from a response list
+        /// </summary>
+        /// <typeparam name="T">Generic type</typeparam>
+        /// <param name="list">List of generic object</param>
+        /// <returns>Response object</returns>
+        private static ResponseFunction BuildReponseFromList<T>(List<T> list)
+        {
+            if (list.Equals(null))
+                return new ResponseFunction
+                {
+                    StatusCode = StatusCodes.INTERNALSERVERERROR,
+                    Message = "Ocorreu um erro inesperado",
+                    Data = null
+                };
+            if (list.Count.Equals(0))
+                return new ResponseFunction
+                {
+                    StatusCode = StatusCodes.NOCONTENT,
+                    Message = "Não existem registos",
+                    Data = null
+                };
+            return new ResponseFunction
+            {
+                StatusCode = StatusCodes.SUCCESS,
+                Message = $"Foram obtidos {list.Count} resultados",
+                Data = list
+            };
+        }
         /*
 
         /// <summary>
