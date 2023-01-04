@@ -43,6 +43,43 @@ namespace L4U_DAL_DATA.Services
             }
         }*/
 
+        public static async Task<List<User>> GetAllUsers(string connectString)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    string updateLocker = "SELECT * FROM users";
+                    using (SqlCommand cmd = new SqlCommand(updateLocker))
+                    {
+                        cmd.Connection = conn;
+                        conn.Open();
+                        // Execute the command and get the data
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        List<User> users = new List<User>();
+                        while (reader.Read())
+                        {
+                            User user = new User();
+                            user.Id = reader.GetString(0);
+                            user.FirstName = reader.GetString(1);
+                            user.LastName = reader.GetString(2);
+                            user.Email = reader.GetString(3);
+                            user.Password = reader.GetString(4);
+                            users.Add(user);
+                        }
+
+                        return users;
+
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
 
         public static async Task<bool> AddNewUser(User user, string connectString)
         {
