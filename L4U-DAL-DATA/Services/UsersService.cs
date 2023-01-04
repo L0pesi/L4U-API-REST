@@ -49,7 +49,6 @@ namespace L4U_DAL_DATA.Services
         /// <returns>True if succeed, false otherwise</returns>
         public static async Task<bool> AddNewUser(User user, string connectString)
         {
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectString))

@@ -1,4 +1,4 @@
-﻿using L4U_BOL_MODEL.Models;
+using L4U_BOL_MODEL.Models;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -11,6 +11,7 @@ namespace L4U_DAL_DATA.Services
         {
 
             try
+
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
@@ -44,11 +45,13 @@ namespace L4U_DAL_DATA.Services
         }
 
         public static async Task<bool> UpdateStore(Store store, string connectString)
+
         {
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
+
                 {
                     //conn.Open();
                     string addStore = "UPDATE stores SET id = @Id , address = @Address,  city = @City, district = @District,name = @Name WHERE id = @Id";
@@ -59,7 +62,7 @@ namespace L4U_DAL_DATA.Services
 
                         cmd.Connection = conn;
 
-                        cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
+       cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
                         cmd.Parameters.Add("@Address", SqlDbType.NVarChar, 50).Value = store.Address;
                         cmd.Parameters.Add("@City", SqlDbType.NVarChar, 50).Value = store.City;
                         cmd.Parameters.Add("@District", SqlDbType.NVarChar, 50).Value = store.District;
@@ -108,6 +111,7 @@ namespace L4U_DAL_DATA.Services
         public static async Task<List<Store>> GetAllStores(string connectString)
         {
             try
+
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {

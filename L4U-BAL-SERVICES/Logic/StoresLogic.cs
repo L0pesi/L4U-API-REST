@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -114,6 +114,7 @@ namespace L4U_BAL_SERVICES.Logic
                 };
             return StandardResponse.Error();
         }
+ 
 
 
         public static async Task<ResponseFunction> DeleteStore(Store store, string connectString)

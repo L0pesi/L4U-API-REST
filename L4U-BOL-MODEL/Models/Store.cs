@@ -10,6 +10,7 @@
         // public List<Store> Stores { get; set; } = null; //lista de cacifos
         //public List<Store> stores { get; set; } = null;
 
+
         public Store()
         { }
 

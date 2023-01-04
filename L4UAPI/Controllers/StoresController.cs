@@ -24,6 +24,7 @@ namespace L4U_WebService.Controllers
         [HttpPost("AddNewStore")]
         public async Task<IActionResult> AddNewStore(Store store)
         {
+
             string cs = _configuration.GetConnectionString("conectorDb");
             ResponseFunction response = await StoresLogic.AddNewStore(store, cs);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
@@ -32,6 +33,7 @@ namespace L4U_WebService.Controllers
             }
             return new JsonResult(response);
         }
+
 
         /// <summary>
         /// This controller method updates a given product store object
@@ -48,6 +50,7 @@ namespace L4U_WebService.Controllers
                 return StandardResponse.InvalidRequestResponse();
             return await StoresLogic.UpdateStore(request, cs);
         }
+
 
         [HttpDelete("DeleteStoreById")]
         public async Task<IActionResult> DeleteLocker(Store store)
@@ -68,6 +71,5 @@ namespace L4U_WebService.Controllers
             string cs = _configuration.GetConnectionString("conectorDb");
             return await StoresLogic.GetAllStores(cs);
         }
-
     }
 }

@@ -11,6 +11,7 @@ namespace L4U_BOL_MODEL.Models
 
         //public List<User> users { get; set; } = null;
 
+
         public string Password { get; set; }
 
         public string Token { get; set; } = string.Empty;
