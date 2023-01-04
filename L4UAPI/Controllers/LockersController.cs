@@ -11,7 +11,7 @@ namespace L4U_WebService.Controllers
     [ApiController]
     public class LockerController : ControllerBase
     {
-        
+
 
         private readonly IConfiguration _configuration;
 
@@ -19,22 +19,6 @@ namespace L4U_WebService.Controllers
         {
             _configuration = configuration;
         }
-
-       
-
-        /*GET :api/LockerController
-        [HttpGet]
-        public IEnumerable<Locker> Get()
-        {
-            return _lockersLogic.GetLockers;
-        }*/
-
-        // GET api/<UsersController>/5
-        /*[HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }*/
 
         [HttpPost("AddNewLocker")]
         public async Task<IActionResult> AddNewLocker(Locker locker)
@@ -49,47 +33,86 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
-    }
-
-    /*
-    /// <summary>
-    /// This is the Locker controller class, responsible to receive and handle all Locker's request
-    /// </summary>
-    [ApiController]
-    [Route("api/[controller]")]
-    public class LockerController : ControllerBase
-    {
-
-        /// <summary>
-        /// Application path 
-        /// </summary>
-        private string appPath;
-
-
-
-        /// <summary>
-        /// Constructor
-        /// Implementação do webHostEnvironment (com as duas declarações anteriores)
-        /// </summary>
-        /// <param name="webHostEnvironment">Dependecy injection of IWebHostEnvironment interface</param>
-        public LockerController(IWebHostEnvironment webHostEnvironment)
+        [HttpPut("UpdateLockerById")]
+        public async Task<IActionResult> UpdateLocker(Locker locker)
         {
-            this.appPath = webHostEnvironment.ContentRootPath;
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await LockersLogic.UpdateLocker(locker, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
         }
 
-
+        [HttpDelete("DeleteLocker")]
+        public async Task<IActionResult> DeleteLocker(Locker locker)
+        {
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await LockersLogic.DeleteLocker(locker, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
 
         /// <summary>
-        /// This controller method retrives all lockers
+        /// This controller method retrives all products
         /// </summary>
-        /// <returns>List dos lockers</returns>
+        /// <returns>List of products</returns>
         [HttpGet]
-        [Route("getall")]
-        public async Task<ResponseFunction> GetLockers()
+        [Route("GetAllLockers")]
+        public async Task<ResponseFunction> GetAllLockers()
         {
-            return await LockersLogic.GetAllLockers(appPath);
+            string cs = _configuration.GetConnectionString("conectorDb");
+            return await LockersLogic.GetAllLockers(cs);
         }
-        */
 
 
-}
+
+
+        /*
+        /// <summary>
+        /// This is the Locker controller class, responsible to receive and handle all Locker's request
+        /// </summary>
+        [ApiController]
+        [Route("api/[controller]")]
+        public class LockerController : ControllerBase
+        {
+
+            /// <summary>
+            /// Application path 
+            /// </summary>
+            private string appPath;
+
+
+
+            /// <summary>
+            /// Constructor
+            /// Implementação do webHostEnvironment (com as duas declarações anteriores)
+            /// </summary>
+            /// <param name="webHostEnvironment">Dependecy injection of IWebHostEnvironment interface</param>
+            public LockerController(IWebHostEnvironment webHostEnvironment)
+            {
+                this.appPath = webHostEnvironment.ContentRootPath;
+            }
+
+
+
+            /// <summary>
+            /// This controller method retrives all lockers
+            /// </summary>
+            /// <returns>List dos lockers</returns>
+            [HttpGet]
+            [Route("getall")]
+            public async Task<ResponseFunction> GetLockers()
+            {
+                return await LockersLogic.GetAllLockers(appPath);
+            }
+            */
+
+    }
+    }

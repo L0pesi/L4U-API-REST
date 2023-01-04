@@ -13,7 +13,7 @@ namespace L4U_BOL_MODEL.Models
         // string UserName { get; set; }
         //public string City { get; set; }
 
-        public List<User> users { get; set; } = null;
+        //public List<User> users { get; set; } = null;
 
         public string Password { get; set; }
 

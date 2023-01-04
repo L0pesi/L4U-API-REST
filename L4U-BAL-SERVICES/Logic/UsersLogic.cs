@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using L4U_DAL_DATA.Services;
 using L4U_DAL_DATA.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using L4U_BAL_SERVICES.Utilities;
 
 namespace L4U_BAL_SERVICES.Logic
 {
@@ -39,7 +40,7 @@ namespace L4U_BAL_SERVICES.Logic
         {
             //string result = await UsersService.AddNewUser(user, connectString);
             if (!user.IsValid()) throw new Exception("Propriedades não intanciadas");
-
+            user.Password = Criptography.Encrypt(user.Password);
             ResponseFunction response = new ResponseFunction();
             try
             {
@@ -105,6 +106,41 @@ namespace L4U_BAL_SERVICES.Logic
             return response;
         }
 
+        public static async Task<ResponseFunction> UpdateUser(User user, string connectString)
+        {
+            //string result = await UsersService.AddNewUser(user, connectString);
+            if (!user.IsValid()) throw new Exception("Propriedades não intanciadas");
+
+            ResponseFunction response = new ResponseFunction();
+            try
+            {
+                if (await UsersService.UpdateUser(user, connectString))
+                {
+                    response.StatusCode = StatusCodes.CREATED;
+                    response.Message = SystemMessages.RecordAdded;
+                    //response.Data = true;
+                }
+                else
+                {
+                    response.StatusCode = StatusCodes.INTERNALSERVERERROR;
+                    response.Message = SystemMessages.ErrorMessage;
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = StatusCodes.BADREQUEST;
+                //response.Message = SystemMessages.USEREXISTS;
+                response.Message = e.Message ?? SystemMessages.BadRequestMessage;
+                //response.Data = false;
+                throw;
+            }
+            return response;
+        }
+
+
+
+
+
         /// <summary>
         /// This method calls the necessary service to get all productStore and based on the response, builds up the response
         /// </summary>
@@ -146,6 +182,21 @@ namespace L4U_BAL_SERVICES.Logic
                 Message = $"Foram obtidos {list.Count} resultados",
                 Data = list
             };
+        }
+
+
+        public static async Task<ResponseFunction> DeleteUser(User user, string connectString)
+        {
+            bool b = await UsersService.DeleteUser(user, connectString);
+
+            if (b)
+                return new ResponseFunction
+                {
+                    StatusCode = StatusCodes.SUCCESS,
+                    Message = SystemMessages.RecordDeleted,
+                    Data = b
+                };
+            return StandardResponse.Error();
         }
         /*
 
