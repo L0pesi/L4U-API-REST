@@ -71,19 +71,21 @@ namespace L4U_DAL_DATA.Services
                 {
 
                     string addLocker = "INSERT INTO lockers " +
-                        "(pinCode, masterCode, lockerType) " + //Username, City) " +
+                        "(id, pinCode, masterCode, lockerType) " + //Username, City) " +
                         "VALUES " +
-                        "(@PinCode, @MasterCode, @LockerType, @IdStore)";
+                        "(@Id, @PinCode, @MasterCode, @LockerType, @IdStore)";
                     using (SqlCommand cmd = new SqlCommand(addLocker))
                     {
 
                         conn.Open();
                         cmd.Connection = conn;
+                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar).Value = locker.Id;
                         cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = pinCode;
                         cmd.Parameters.Add("@MasterCode", SqlDbType.NVarChar).Value = masterCode;
                         cmd.Parameters.Add("@LockerType", SqlDbType.NVarChar).Value = locker.LockerType;
 
                         int result = cmd.ExecuteNonQuery();
+                    
                         conn.Close();
                         return result.Equals(1);
 
