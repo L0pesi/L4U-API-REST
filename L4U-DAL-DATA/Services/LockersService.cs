@@ -44,7 +44,7 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -63,23 +63,26 @@ namespace L4U_DAL_DATA.Services
 
             try
             {
+                string pinCode = GenerateRandomPinCode();
+                string masterCode = GenerateRandomPinCode();
+
+
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
 
                     string addLocker = "INSERT INTO lockers " +
-                        "(pinCode, masterCode, lockerType, idStore) " + //Username, City) " +
+                        "(pinCode, masterCode, lockerType) " + //Username, City) " +
                         "VALUES " +
                         "(@PinCode, @MasterCode, @LockerType, @IdStore)";
                     using (SqlCommand cmd = new SqlCommand(addLocker))
                     {
 
-
+                        conn.Open();
                         cmd.Connection = conn;
-                        cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = locker.PinCode;
-                        cmd.Parameters.Add("@MasterCode", SqlDbType.NVarChar).Value = locker.MasterCode;
+                        cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = pinCode;
+                        cmd.Parameters.Add("@MasterCode", SqlDbType.NVarChar).Value = masterCode;
                         cmd.Parameters.Add("@LockerType", SqlDbType.NVarChar).Value = locker.LockerType;
 
-                        conn.Open();
                         int result = cmd.ExecuteNonQuery();
                         conn.Close();
                         return result.Equals(1);
@@ -91,6 +94,20 @@ namespace L4U_DAL_DATA.Services
             {
                 return false;
             }
+        }
+
+        public static string GenerateRandomPinCode()
+        {
+            Random rnd = new Random();
+            int pinCode = rnd.Next(1000, 9999); // generates a random PinCode of 4 digits
+            return pinCode.ToString();
+        }
+
+        public static string GenerateRandomMasterCode()
+        {
+            Random rnd = new Random();
+            int masterCode = rnd.Next(1000, 9999); // generates a random MasterCode of 4 digits
+            return masterCode.ToString();
         }
 
 
@@ -129,7 +146,7 @@ namespace L4U_DAL_DATA.Services
                     */
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -172,7 +189,7 @@ namespace L4U_DAL_DATA.Services
                     */
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -213,7 +230,7 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -249,7 +266,7 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
