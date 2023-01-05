@@ -1,17 +1,11 @@
 ﻿using L4U_BAL_SERVICES.Logic;
-using L4U_BOL_MODEL.Response;
 using L4U_BOL_MODEL.Models;
-using L4U_BOL_MODEL.Utilities;
-using L4U_WebService.Utilities;
-using L4U_DAL_DATA.Utilities;
-
+using L4U_BOL_MODEL.Response;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using static L4U_WebService.Controllers.UsersController;
+using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
 
 namespace L4U_WebService.Controllers
 {
@@ -89,117 +83,16 @@ namespace L4U_WebService.Controllers
             string cs = _configuration.GetConnectionString("conectorDb");
             return await UsersLogic.GetAllUsers(cs);
         }
-
+ 
+        
+    
         //inativar user => definir o bit isActive = 0
 
         //Login => WHERE isActive = 1
 
-        /*
-        // POST
-        // ADICIONAR NOVO UTILIZADOR
-        // api/<UsersController>
-        [HttpPost]
-        public void Post([FromBody] User user)
-        {
-
-            _usersLogic.AddNewUser(user);
-
-        }
-        /*
-
-
-        // GET
-        // LISTAR TODOS UTILIZADORES
-        // api/<UsersController>
-        [HttpGet]
-        public IEnumerable<User> Get()
-        {
-            return _usersLogic.GetUsers;
-        }
-
-        [HttpPut]
-        public void Putt([FromBody] User user)
-        {
-
-            _usersLogic.UpdateUser(user);
-
-        }
-
-
-        #region Versão com erros - Stored Procedures
-
-        /*
-          
-        
-        /// <summary>
-        /// Application path
-        /// </summary>
-        private string appPath;
-
-        /// <summary>
-        /// App settings class
-        /// </summary>
-        private readonly AppSettings appSettings;
-
-        /// <summary>
-        /// Constructor
-        /// Implementação do webHostEnvironment (com as duas declarações anteriores)
-        /// </summary>
-        /// <param name="webHostEnvironment">Dependecy injection of IWebHostEnvironment interface</param>
-        public UsersController(IWebHostEnvironment webHostEnvironment, IOptions<AppSettings> _appSettings)
-        {
-            this.appPath = webHostEnvironment.ContentRootPath;
-            this.appSettings = _appSettings.Value;
-        }
-        
-          
-          
-         
-        [HttpPost]
-        [Route("create")]
-        public async Task<ResponseFunction> AddNewUser([FromBody] User request)
-        {
-
-            if (!ModelState.IsValid)
-                return StandardResponse.InvalidRequestResponse();
-            return await UsersLogic.AddNewUser(request, appPath);
-
-        }
-
-        [HttpDelete]
-        [Route("delete")]
-        public async Task<ResponseFunction> DeleteUser([FromBody] RequestModel request)
-        {
-            if (!ModelState.IsValid)
-                return StandardResponse.InvalidRequestResponse();
-            return await UsersLogic.DeleteUser(request.Uid, appPath);
-        }
-
-        
-        [HttpPost]
-        [Route("login")]
-        public async Task<Response> Login([FromBody] UserRequestMin request)
-        {
-            if (!ModelState.IsValid)
-                return StandardResponse.InvalidRequestResponse();
-
-            Response AuthUser = await UsersLogic.LoginUser(request, appPath);
-
-            //adds token jwt
-            User temp = (User)AuthUser.Data;
-            temp.Token = GenerateJwtToken(temp);
-
-            AuthUser.Data = temp;
-
-            return AuthUser;
-        }
-
-        
-        #endregion
-        */
-
-
         #region Generate Token - Mais tarde
+
+
 
         /*
 
@@ -226,8 +119,6 @@ namespace L4U_WebService.Controllers
 
         */
         #endregion
-
-
-
+ 
     }
 }
