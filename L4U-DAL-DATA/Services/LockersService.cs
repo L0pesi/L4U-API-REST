@@ -1,9 +1,5 @@
 ﻿using L4U_BOL_MODEL.Models;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SqlTypes;
 using System.Data.SqlClient;
 
 
@@ -11,15 +7,13 @@ namespace L4U_DAL_DATA.Services
 {
     public class LockersService
     {
-        //conexao
-        string conexao = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022;";
-
         public static async Task<List<Locker>> GetAllLockers(string connectString)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
+                    //get da store-> cacifos criados nessa loja
                     string GetAllLockers = "SELECT * FROM lockers";
                     using (SqlCommand cmd = new SqlCommand(GetAllLockers))
                     {
@@ -70,13 +64,82 @@ namespace L4U_DAL_DATA.Services
                         cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = locker.PinCode;
                         cmd.Parameters.Add("@MasterCode", SqlDbType.NVarChar).Value = locker.MasterCode;
                         cmd.Parameters.Add("@LockerType", SqlDbType.NVarChar).Value = locker.LockerType;
+
                         cmd.Parameters.Add("@IdStore", SqlDbType.NVarChar).Value = locker.IdStore;
+
                         conn.Open();
                         int result = cmd.ExecuteNonQuery();
                         conn.Close();
                         return result.Equals(1);
 
                     }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public static async Task<bool> OpenLocker(Locker locker, string connectString)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    conn.Open();
+                    string sql = "UPDATE lockers SET lockerStatus = 0 WHERE id = @id AND pinCode = @pinCode";
+
+                    SqlCommand command = new SqlCommand(sql, conn);
+                    command.Parameters.AddWithValue("@id", locker.Id);
+                    command.Parameters.AddWithValue("@pinCode", locker.PinCode);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected.Equals(1);
+                    /*
+                    if (rowsAffected == 0)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Locker not found or invalid pin code");
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK);
+                    }
+                    */
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public static async Task<bool> CloseLocker(Locker locker, string connectString)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    conn.Open();
+                    string sql = "UPDATE lockers SET lockerStatus = 1 WHERE id = @id AND pinCode = @pinCode";
+
+                    SqlCommand command = new SqlCommand(sql, conn);
+                    command.Parameters.AddWithValue("@id", locker.Id);
+                    command.Parameters.AddWithValue("@pinCode", locker.PinCode);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                    conn.Close();
+                    return rowsAffected.Equals(1);
+                    /*
+                    if (rowsAffected == 0)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Locker not found or invalid pin code");
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK);
+                    }
+                    */
                 }
             }
             catch (Exception e)

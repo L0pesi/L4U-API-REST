@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using L4U_BAL_SERVICES.Logic;
+﻿using L4U_BAL_SERVICES.Logic;
 using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
 
 namespace L4U_WebService.Controllers
 {
@@ -26,6 +24,32 @@ namespace L4U_WebService.Controllers
             //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
             string cs = _configuration.GetConnectionString("conectorDb");
             ResponseFunction response = await LockersLogic.AddNewLocker(locker, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
+
+        [HttpPut("OpenLocker")]
+        public async Task<IActionResult> OpenLocker(Locker locker)
+        {
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await LockersLogic.OpenLocker(locker, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
+
+        [HttpPut("CloseLocker")]
+        public async Task<IActionResult> CloseLocker(Locker locker)
+        {
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await LockersLogic.OpenLocker(locker, cs);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
             {
                 return StatusCode((int)response.StatusCode);
@@ -70,49 +94,5 @@ namespace L4U_WebService.Controllers
             string cs = _configuration.GetConnectionString("conectorDb");
             return await LockersLogic.GetAllLockers(cs);
         }
-
-
-
-
-        /*
-        /// <summary>
-        /// This is the Locker controller class, responsible to receive and handle all Locker's request
-        /// </summary>
-        [ApiController]
-        [Route("api/[controller]")]
-        public class LockerController : ControllerBase
-        {
-
-            /// <summary>
-            /// Application path 
-            /// </summary>
-            private string appPath;
-
-
-
-            /// <summary>
-            /// Constructor
-            /// Implementação do webHostEnvironment (com as duas declarações anteriores)
-            /// </summary>
-            /// <param name="webHostEnvironment">Dependecy injection of IWebHostEnvironment interface</param>
-            public LockerController(IWebHostEnvironment webHostEnvironment)
-            {
-                this.appPath = webHostEnvironment.ContentRootPath;
-            }
-
-
-
-            /// <summary>
-            /// This controller method retrives all lockers
-            /// </summary>
-            /// <returns>List dos lockers</returns>
-            [HttpGet]
-            [Route("getall")]
-            public async Task<ResponseFunction> GetLockers()
-            {
-                return await LockersLogic.GetAllLockers(appPath);
-            }
-            */
-
     }
-    }
+}

@@ -56,13 +56,12 @@ namespace L4U_BAL_SERVICES.Logic
             if (string.IsNullOrEmpty(user.Password))
                 throw new Exception("Password não fornecida");
 
-
             ResponseFunction response = new ResponseFunction();
             try
             {
                 User userAuth = await UsersService.Authenticate(user, connectString);
 
-                if (userAuth != null)
+                if (user.Password.Equals(Criptography.Decrypt(userAuth.Password)))
                 {
                     userAuth.Password = string.Empty;
 
