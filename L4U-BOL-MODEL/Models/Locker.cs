@@ -17,6 +17,7 @@ namespace L4U_BOL_MODEL.Models
 
         public string LockerType { get; set; }
 
+
         public Locker() { }
         public Locker(object obj)
         { }
