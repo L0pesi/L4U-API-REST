@@ -7,6 +7,7 @@
         public string City { get; set; }
         public string District { get; set; }
         public string Name { get; set; }
+        public string IdStores { get; set; }
         // public List<Store> Stores { get; set; } = null; //lista de cacifos
         //public List<Store> stores { get; set; } = null;
 
