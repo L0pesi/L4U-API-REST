@@ -17,6 +17,12 @@ namespace L4U_BOL_MODEL.Models
 
         public string LockerType { get; set; }
 
+        public bool LockerStatus { get; set; }
+
+        public string LockerId { get; set; }
+
+        //public List<Locker> lockers { get; set; } = null;
+
 
         public Locker() { }
         public Locker(object obj)

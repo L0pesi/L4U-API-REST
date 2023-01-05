@@ -58,7 +58,8 @@ namespace L4U_DAL_DATA.Services
                     string addLocker = "INSERT INTO lockers " +
                         "(id, pinCode, masterCode, lockerType) " + //Username, City) " +
                         "VALUES " +
-                        "(@Id, @PinCode, @MasterCode, @LockerType, @IdStore)";
+                        "(@Id, @PinCode, @MasterCode, @LockerType)";
+
                     using (SqlCommand cmd = new SqlCommand(addLocker))
                     {
 
