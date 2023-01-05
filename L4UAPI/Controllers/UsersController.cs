@@ -4,7 +4,6 @@ using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Utilities;
 using L4U_WebService.Utilities;
 using L4U_DAL_DATA.Utilities;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -30,6 +29,13 @@ namespace L4U_WebService.Controllers
             _configuration = configuration;
         }
 
+
+
+        /// <summary>
+        /// This is the controller of AddNewUser Method
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         //[Authorize]
         [HttpPost("AddNewUser")]
         public async Task<IActionResult> AddNewUser(User user)
@@ -43,6 +49,13 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
+
+        /// <summary>
+        /// This is the controller of Authenticate Method
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost("authenticate")]
         public async Task<IActionResult> AuthenticateMe(UserAuth user)
         {
@@ -55,6 +68,13 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
+
+        /// <summary>
+        /// This is the controller of DeleteUser Method
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUser(User user)
         {
@@ -69,6 +89,13 @@ namespace L4U_WebService.Controllers
         }
 
 
+
+
+        /// <summary>
+        /// This is the controller of Update Method
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser(User user)
         {
@@ -82,6 +109,12 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
+
+        /// <summary>
+        /// This is the controller of GetAllUsers Method
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("GetAllUsers")]
         public async Task<ResponseFunction> GetAllUsers()
@@ -90,9 +123,17 @@ namespace L4U_WebService.Controllers
             return await UsersLogic.GetAllUsers(cs);
         }
 
+
+        #region Ideias AF
+
         //inativar user => definir o bit isActive = 0
 
         //Login => WHERE isActive = 1
+
+        #endregion
+
+
+        #region Codigo antigo com material de estudo
 
         /*
         // POST
@@ -198,8 +239,10 @@ namespace L4U_WebService.Controllers
         #endregion
         */
 
+        #endregion
 
-        #region Generate Token - Mais tarde
+
+        #region Generate Token - Implementar Mais tarde
 
         /*
 

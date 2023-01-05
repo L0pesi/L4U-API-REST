@@ -10,6 +10,7 @@ namespace L4U_BOL_MODEL.Utilities
 {
     public static class StandardResponse
     {
+
         /// <summary>
         /// This method returns a response object with status code not found
         /// </summary>
@@ -20,6 +21,7 @@ namespace L4U_BOL_MODEL.Utilities
             Message = SystemMessages.NotFoundMessage,
             Data = null
         };
+
 
         /// <summary>
         /// This method returns a response object with status code no content
@@ -32,6 +34,7 @@ namespace L4U_BOL_MODEL.Utilities
             Data = null
         };
 
+
         /// <summary>
         /// This method returns a response object with status code invalid request
         /// </summary>
@@ -43,6 +46,11 @@ namespace L4U_BOL_MODEL.Utilities
             Data = null
         };
 
+
+        /// <summary>
+        /// This method returns a response object with status code ERROR
+        /// </summary>
+        /// <returns></returns>
         public static ResponseFunction Error() => new ResponseFunction
         {
             StatusCode = StatusCodes.INTERNALSERVERERROR,

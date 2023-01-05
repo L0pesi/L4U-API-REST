@@ -7,6 +7,13 @@ namespace L4U_DAL_DATA.Services
     public class StoresService
     {
 
+
+        /// <summary>
+        /// This Method Adds a new Store to the Database
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> AddNewStore(Store store, string connectString)
         {
 
@@ -44,6 +51,14 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+
+
+        /// <summary>
+        /// This method Udates a Store in the Database
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> UpdateStore(Store store, string connectString)
 
         {
@@ -62,7 +77,7 @@ namespace L4U_DAL_DATA.Services
 
                         cmd.Connection = conn;
 
-       cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
+                        cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
                         cmd.Parameters.Add("@Address", SqlDbType.NVarChar, 50).Value = store.Address;
                         cmd.Parameters.Add("@City", SqlDbType.NVarChar, 50).Value = store.City;
                         cmd.Parameters.Add("@District", SqlDbType.NVarChar, 50).Value = store.District;
@@ -82,6 +97,14 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+
+
+        /// <summary>
+        /// This Method Deletes a Store in the Database
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> DeleteStore(Store store, string connectString)
         {
             try
@@ -108,6 +131,14 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
+
+
+
+        /// <summary>
+        /// This Method Gets All Stores in the Database
+        /// </summary>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<List<Store>> GetAllStores(string connectString)
         {
             try
@@ -141,5 +172,12 @@ namespace L4U_DAL_DATA.Services
                 return null;
             }
         }
+
+
+        #region Material Estudo - para implementação
+
+        #endregion
+
+
     }
 }
