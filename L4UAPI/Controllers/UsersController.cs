@@ -90,11 +90,9 @@ namespace L4U_WebService.Controllers
             return await UsersLogic.GetAllUsers(cs);
         }
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //inativar user => definir o bit isActive = 0
 
         //Login => WHERE isActive = 1
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         /*
         // POST

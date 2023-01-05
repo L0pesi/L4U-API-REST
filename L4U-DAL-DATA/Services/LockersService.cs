@@ -13,7 +13,6 @@ namespace L4U_DAL_DATA.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    //get da store-> cacifos criados nessa loja
                     string GetAllLockers = "SELECT * FROM lockers";
                     using (SqlCommand cmd = new SqlCommand(GetAllLockers))
                     {
@@ -64,8 +63,6 @@ namespace L4U_DAL_DATA.Services
                         cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = locker.PinCode;
                         cmd.Parameters.Add("@MasterCode", SqlDbType.NVarChar).Value = locker.MasterCode;
                         cmd.Parameters.Add("@LockerType", SqlDbType.NVarChar).Value = locker.LockerType;
-
-                        cmd.Parameters.Add("@IdStore", SqlDbType.NVarChar).Value = locker.IdStore;
 
                         conn.Open();
                         int result = cmd.ExecuteNonQuery();
