@@ -96,14 +96,15 @@ namespace L4U_DAL_DATA.Services
                     using (SqlCommand cmd = new SqlCommand(addUser))
                     {
                         conn.Open(); //this
-
+                        //user.Password = Criptography.Encrypt(user.Password);
                         cmd.CommandTimeout = 120;
 
                         cmd.Connection = conn;
 
                         cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 50).Value = user.Email;
                         cmd.Parameters.Add("@Pass", SqlDbType.NVarChar, 50).Value = user.Password;
-                        var x = cmd.ExecuteScalarAsync();
+
+                        var x = cmd.ExecuteScalar();
 
                         //conn.Open();
                         authUser = new User(x);

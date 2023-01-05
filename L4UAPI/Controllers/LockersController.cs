@@ -33,6 +33,19 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+        [HttpPut("OpenLocker")]
+        public async Task<IActionResult> OpenLocker(Locker locker)
+        {
+            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await LockersLogic.OpenLocker(locker, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
+
         [HttpPut("UpdateLockerById")]
         public async Task<IActionResult> UpdateLocker(Locker locker)
         {

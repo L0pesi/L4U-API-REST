@@ -56,7 +56,6 @@ namespace L4U_BAL_SERVICES.Logic
             if (string.IsNullOrEmpty(user.Password))
                 throw new Exception("Password não fornecida");
 
-
             ResponseFunction response = new ResponseFunction();
             try
             {
