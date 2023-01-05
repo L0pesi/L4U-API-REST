@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 
 namespace L4U_BOL_MODEL.Utilities
 {
-
-    /// <summary>
-    /// Library for System Messages
-    /// </summary>
     public static class SystemMessages
     {
         public static readonly string NoContentMessage = "Não existem registos.";

@@ -7,13 +7,6 @@ namespace L4U_DAL_DATA.Services
 {
     public class LockersService
     {
-
-
-        /// <summary>
-        /// This Method Gets All Lockers in the Database
-        /// </summary>
-        /// <param name="connectString"></param>
-        /// <returns></returns>
         public static async Task<List<Locker>> GetAllLockers(string connectString)
         {
             try
@@ -50,14 +43,6 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
-
-
-        /// <summary>
-        /// This Method Adds a new Locker to the database
-        /// </summary>
-        /// <param name="locker"></param>
-        /// <param name="connectString"></param>
-        /// <returns></returns>
         public static async Task<bool> AddNewLocker(Locker locker, string connectString)
         {
 
@@ -112,15 +97,6 @@ namespace L4U_DAL_DATA.Services
             return masterCode.ToString();
         }
 
-
-
-        /// <summary>
-        /// This is the controller of the Method that gives information about the availability of the locker
-        /// When it is open it's state is 0
-        /// </summary>
-        /// <param name="locker"></param>
-        /// <param name="connectString"></param>
-        /// <returns></returns>
         public static async Task<bool> OpenLocker(Locker locker, string connectString)
         {
             try
@@ -154,15 +130,6 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
-
-
-        /// <summary>
-        /// This is the controller of the Method that gives information about the closure of the locker
-        /// When it is close it's state is 1 
-        /// </summary>
-        /// <param name="locker"></param>
-        /// <param name="connectString"></param>
-        /// <returns></returns>
         public static async Task<bool> CloseLocker(Locker locker, string connectString)
         {
             try
@@ -197,14 +164,6 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
-
-
-        /// <summary>
-        /// This Method Updates a locker in the Database
-        /// </summary>
-        /// <param name="locker"></param>
-        /// <param name="connectString"></param>
-        /// <returns></returns>
         public static async Task<bool> UpdateLocker(Locker locker, string connectString)
         {
             try
@@ -238,14 +197,6 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
-
-
-        /// <summary>
-        /// This Method Deletes a Locker in the Database
-        /// </summary>
-        /// <param name="locker"></param>
-        /// <param name="connectString"></param>
-        /// <returns></returns>
         public static async Task<bool> DeleteLocker(Locker locker, string connectString)
         {
             try
@@ -273,38 +224,5 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
-
-
-        #region Material Estudo - Para implementação
-
-        /*public void AddLocker(Locker locker)
-        {
-            List<Locker> lockers = new List<Locker>();
-
-            using (SqlConnection conn = new SqlConnection(conexao))
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO lockers (pinCode, masterCode, lockerType) VALUES (@PinCode, @MasterCode, @LockerType)", conn))
-
-                //using (SqlCommand cmd = new SqlCommand("INSERT INTO lockers (idClient, pinCode, masterCode, lockerType, idStore) VALUES (@IdClient, @PinCode, @MasterCode, @LockerType,@IdStore)", conn))
-                {
-
-                    cmd.CommandType = CommandType.Text;
-                    //cmd.Parameters.AddWithValue("@IdClient", locker.IdClient);
-                    cmd.Parameters.AddWithValue("@PinCode", locker.PinCode);
-                    cmd.Parameters.AddWithValue("@MasterCode", locker.MasterCode);
-                    cmd.Parameters.AddWithValue("@LockerType", locker.LockerType);
-                    //cmd.Parameters.AddWithValue("@IdStore", locker.IdStore);
-
-                    cmd.ExecuteNonQuery();
-
-                }
-            }
-
-        }*/
-
-        #endregion
-
-
     }
 }

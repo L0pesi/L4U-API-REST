@@ -7,12 +7,6 @@ namespace L4U_DAL_DATA.Services
     public class UsersService
     {
 
-
-        /// <summary>
-        /// This Method gets all users from the database
-        /// </summary>
-        /// <param name="connectString"></param>
-        /// <returns></returns>
         public static async Task<List<User>> GetAllUsers(string connectString)
         {
             try
@@ -47,9 +41,6 @@ namespace L4U_DAL_DATA.Services
                 return null;
             }
         }
-
-
-
 
         /// <summary>
         /// This method adds a User to the database
@@ -90,15 +81,6 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
-
-
-
-        /// <summary>
-        /// This method Authenticates a User on the Database
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="connectString"></param>
-        /// <returns></returns>
         public static async Task<User> Authenticate(UserAuth user, string connectString)
         {
             User authUser = new User();
@@ -141,14 +123,6 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
-
-
-        /// <summary>
-        /// This method Updates info of a user on de Database
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="connectString"></param>
-        /// <returns></returns>
         public static async Task<bool> UpdateUser(User user, string connectString)
         {
             try
@@ -182,14 +156,6 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
-
-
-        /// <summary>
-        /// This method Deletes a User on the Database
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="connectString"></param>
-        /// <returns></returns>
         public static async Task<bool> DeleteUser(User user, string connectString)
         {
             try
@@ -217,10 +183,6 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
-
-
-
-        #region Material estudo - para implementação
 
         /*
         public void UpdateUser(User user)
@@ -358,9 +320,6 @@ namespace L4U_DAL_DATA.Services
         #endregion
 
         */
-
-        #endregion
-
 
     }
 }

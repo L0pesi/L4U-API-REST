@@ -9,7 +9,6 @@ namespace L4U_DAL_DATA.Utilities
 {
     /// <summary>
     /// This enum lists the possible sql requests that can be made
-    /// (for stProcd)
     /// </summary>
     public enum SqlEnumTypes
     {
