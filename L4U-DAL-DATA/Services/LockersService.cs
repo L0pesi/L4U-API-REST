@@ -37,7 +37,7 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -48,23 +48,26 @@ namespace L4U_DAL_DATA.Services
 
             try
             {
+                string pinCode = GenerateRandomPinCode();
+                string masterCode = GenerateRandomPinCode();
+
+
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
 
                     string addLocker = "INSERT INTO lockers " +
-                        "(pinCode, masterCode, lockerType, idStore) " + //Username, City) " +
+                        "(pinCode, masterCode, lockerType) " + //Username, City) " +
                         "VALUES " +
                         "(@PinCode, @MasterCode, @LockerType, @IdStore)";
                     using (SqlCommand cmd = new SqlCommand(addLocker))
                     {
 
-
+                        conn.Open();
                         cmd.Connection = conn;
-                        cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = locker.PinCode;
-                        cmd.Parameters.Add("@MasterCode", SqlDbType.NVarChar).Value = locker.MasterCode;
+                        cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = pinCode;
+                        cmd.Parameters.Add("@MasterCode", SqlDbType.NVarChar).Value = masterCode;
                         cmd.Parameters.Add("@LockerType", SqlDbType.NVarChar).Value = locker.LockerType;
 
-                        conn.Open();
                         int result = cmd.ExecuteNonQuery();
                         conn.Close();
                         return result.Equals(1);
@@ -76,6 +79,20 @@ namespace L4U_DAL_DATA.Services
             {
                 return false;
             }
+        }
+
+        public static string GenerateRandomPinCode()
+        {
+            Random rnd = new Random();
+            int pinCode = rnd.Next(1000, 9999); // generates a random PinCode of 4 digits
+            return pinCode.ToString();
+        }
+
+        public static string GenerateRandomMasterCode()
+        {
+            Random rnd = new Random();
+            int masterCode = rnd.Next(1000, 9999); // generates a random MasterCode of 4 digits
+            return masterCode.ToString();
         }
 
         public static async Task<bool> OpenLocker(Locker locker, string connectString)
@@ -105,7 +122,7 @@ namespace L4U_DAL_DATA.Services
                     */
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -139,7 +156,7 @@ namespace L4U_DAL_DATA.Services
                     */
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -172,7 +189,7 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -200,38 +217,10 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
         }
-
-        /*public void AddLocker(Locker locker)
-        {
-            List<Locker> lockers = new List<Locker>();
-
-            using (SqlConnection conn = new SqlConnection(conexao))
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO lockers (pinCode, masterCode, lockerType) VALUES (@PinCode, @MasterCode, @LockerType)", conn))
-
-                //using (SqlCommand cmd = new SqlCommand("INSERT INTO lockers (idClient, pinCode, masterCode, lockerType, idStore) VALUES (@IdClient, @PinCode, @MasterCode, @LockerType,@IdStore)", conn))
-                {
-
-                    cmd.CommandType = CommandType.Text;
-                    //cmd.Parameters.AddWithValue("@IdClient", locker.IdClient);
-                    cmd.Parameters.AddWithValue("@PinCode", locker.PinCode);
-                    cmd.Parameters.AddWithValue("@MasterCode", locker.MasterCode);
-                    cmd.Parameters.AddWithValue("@LockerType", locker.LockerType);
-                    //cmd.Parameters.AddWithValue("@IdStore", locker.IdStore);
-
-                    cmd.ExecuteNonQuery();
-
-                }
-            }
-
-        }*/
-
-
     }
 }
