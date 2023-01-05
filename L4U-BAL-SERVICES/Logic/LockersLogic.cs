@@ -87,6 +87,35 @@ namespace L4U_BAL_SERVICES.Logic
             return response;
         }
 
+        public static async Task<ResponseFunction> CloseLocker(Locker locker, string connectString)
+        {
+
+            ResponseFunction response = new ResponseFunction();
+            try
+            {
+                if (await LockersService.CloseLocker(locker, connectString))
+                {
+                    response.StatusCode = StatusCodes.CREATED;
+                    response.Message = SystemMessages.RecordAdded;
+                    //response.Data = true;
+                }
+                else
+                {
+                    response.StatusCode = StatusCodes.INTERNALSERVERERROR;
+                    response.Message = SystemMessages.ErrorMessage;
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = StatusCodes.BADREQUEST;
+                //response.Message = SystemMessages.USEREXISTS;
+                response.Message = e.Message ?? SystemMessages.BadRequestMessage;
+                //response.Data = false;
+                throw;
+            }
+            return response;
+        }
+
         public static async Task<ResponseFunction> UpdateLocker(Locker locker, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);

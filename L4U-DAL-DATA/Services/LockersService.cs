@@ -111,6 +111,39 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+        public static async Task<bool> CloseLocker(Locker locker, string connectString)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    conn.Open();
+                    string sql = "UPDATE lockers SET lockerStatus = 1 WHERE id = @id AND pinCode = @pinCode";
+
+                    SqlCommand command = new SqlCommand(sql, conn);
+                    command.Parameters.AddWithValue("@id", locker.Id);
+                    command.Parameters.AddWithValue("@pinCode", locker.PinCode);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected.Equals(1);
+                    /*
+                    if (rowsAffected == 0)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Locker not found or invalid pin code");
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK);
+                    }
+                    */
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
         public static async Task<bool> UpdateLocker(Locker locker, string connectString)
         {
             try
