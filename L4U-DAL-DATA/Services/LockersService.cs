@@ -125,6 +125,7 @@ namespace L4U_DAL_DATA.Services
                     command.Parameters.AddWithValue("@pinCode", locker.PinCode);
 
                     int rowsAffected = command.ExecuteNonQuery();
+                    conn.Close();
                     return rowsAffected.Equals(1);
                     /*
                     if (rowsAffected == 0)
