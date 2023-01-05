@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 
 namespace L4U_DAL_DATA.Utilities
 {
-
-    /// <summary>
-    /// Library for StoreProcedures
-    /// </summary>
     public class StoreProcedures
     {
         //Stored procedures for users

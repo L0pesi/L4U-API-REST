@@ -7,10 +7,6 @@ using System.Text;
 
 namespace L4U_WebService.Utilities
 {
-
-    /// <summary>
-    /// Validation of token for Authentification
-    /// </summary>
     public class JwtMiddleware
     {
 

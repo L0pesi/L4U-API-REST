@@ -12,7 +12,7 @@ namespace L4U_BOL_MODEL.Models
         public string Id { get; set; }
 
         public string PinCode { get; set; }
-
+        //public List<Locker> lockers { get; set; } = null;
         public string MasterCode { get; set; }
 
         public string LockerType { get; set; }
@@ -25,7 +25,6 @@ namespace L4U_BOL_MODEL.Models
 
 
         public Locker() { }
-
         public Locker(object obj)
         { }
 
@@ -37,8 +36,6 @@ namespace L4U_BOL_MODEL.Models
 
             return true;
         }
-
-
 
     }
 }
