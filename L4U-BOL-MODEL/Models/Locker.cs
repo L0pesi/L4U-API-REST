@@ -19,6 +19,8 @@ namespace L4U_BOL_MODEL.Models
 
         public bool LockerStatus { get; set; }
 
+        public string LockerId { get; set; }
+
         //public List<Locker> lockers { get; set; } = null;
 
 
