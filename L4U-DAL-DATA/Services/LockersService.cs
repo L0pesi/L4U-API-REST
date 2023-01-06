@@ -150,7 +150,7 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

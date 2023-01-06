@@ -2,7 +2,6 @@
 using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace L4U_WebService.Controllers
 {
@@ -103,20 +102,5 @@ namespace L4U_WebService.Controllers
             }
             return new JsonResult(response);
         }
-
-
-        /* [HttpPost("AddNewLocker")]
-         public async Task<IActionResult> AddNewLocker(Locker locker)
-         {
-             string cs = _configuration.GetConnectionString("conectorDb");
-             ResponseFunction response = await LockersLogic.AddNewLocker(locker, cs);
-             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
-             {
-                 return StatusCode((int)response.StatusCode);
-             }
-             return new JsonResult(response);
-         }
-        */
-
     }
-    }
+}
