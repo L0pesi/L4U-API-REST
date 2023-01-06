@@ -1,7 +1,10 @@
 ﻿using L4U_BOL_MODEL.Models;
+using L4U_BOL_MODEL.Response;
+using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-
+using System.Net;
+using System.Net.Mail;
 
 namespace L4U_DAL_DATA.Services
 {
@@ -52,6 +55,78 @@ namespace L4U_DAL_DATA.Services
         }
 
 
+        //COMENTAR----------------------------------------------
+        public static async Task<ResponseFunction> ChooseLocker(string connectString, string userId, string lockerId)
+        {
+            var config = new ConfigurationBuilder()
+                 .SetBasePath(Directory.GetCurrentDirectory())
+                 .AddJsonFile("appsettings.json")
+                 .Build();
+            //var connectionString = config.GetConnectionString("ConnectionString");
+
+
+            SmtpClient smtpClient = new SmtpClient();
+            smtpClient.Host = "smtp.gmail.com";
+            smtpClient.Port = 587;
+            smtpClient.Credentials = new NetworkCredential(config.GetSection("EmailCredentials:Email").Value.ToString(), config.GetSection("EmailCredentials:Password").Value.ToString());
+
+            smtpClient.EnableSsl = true;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    string GetUser = "SELECT * FROM Users WHERE Id = @Id";
+                    using (SqlCommand cmd = new SqlCommand(GetUser))
+                    {
+                        cmd.Connection = conn;
+                        cmd.Parameters.AddWithValue("@Id", userId);
+
+                        conn.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            string email = reader.GetString(3);
+                            reader.Close();
+                            string GetLocker = "SELECT * FROM Lockers WHERE Id = @Id";
+                            cmd.CommandText = GetLocker;
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@Id", lockerId);
+
+                            reader = cmd.ExecuteReader();
+                            if (reader.Read())
+                            {
+                                string pinCode = reader.GetString(1);
+
+                                string to = email;
+                                string subject = "Locker PinCode";
+                                string body = $"Your PinCode for locker {lockerId} is {pinCode}";
+
+                                MailMessage mailMessage = new MailMessage();
+
+                                mailMessage.From = new MailAddress("isitp2.2023@gmail.com");
+                                mailMessage.To.Add(to);
+                                mailMessage.Subject = subject;
+                                mailMessage.Body = body;
+
+                                smtpClient.Send(mailMessage);
+                            }
+                        }
+                        return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS };
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.INTERNALSERVERERROR };
+            }
+        }
+
+
+
+
+
+
 
 
         /// <summary>
@@ -88,14 +163,14 @@ namespace L4U_DAL_DATA.Services
                         cmd.Parameters.Add("@LockerType", SqlDbType.NVarChar).Value = locker.LockerType;
 
                         int result = cmd.ExecuteNonQuery();
-                    
+
                         conn.Close();
                         return result.Equals(1);
 
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

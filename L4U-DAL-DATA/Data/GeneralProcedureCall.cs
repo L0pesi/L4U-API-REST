@@ -92,7 +92,7 @@ namespace L4U_DAL_DATA.Data
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 /// Sistema de LOGS
                 return false;

@@ -1,4 +1,4 @@
-﻿using L4U_BOL_MODEL.Models;
+using L4U_BOL_MODEL.Models;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -46,7 +46,7 @@ namespace L4U_DAL_DATA.Services
                 return users;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -88,7 +88,7 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -138,7 +138,7 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -179,7 +179,7 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -215,11 +215,12 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
         }
+
 
 
         #region Material estudo - para implementação
