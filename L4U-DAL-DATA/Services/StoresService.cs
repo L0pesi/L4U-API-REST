@@ -88,19 +88,26 @@ namespace L4U_DAL_DATA.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    string updateLocker = "Delete from stores where id=@Id";
-                    using (SqlCommand cmd = new SqlCommand(updateLocker))
+                    string deleteLocker = "DELETE FROM lockers WHERE id = @Id";
+                    string deleteStore = "DELETE FROM stores WHERE id = @Id";
+
+                    using (SqlCommand cmd = new SqlCommand(deleteLocker, conn))
                     {
+                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar, 50).Value = store.Id;
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();                
+                        conn.Close();
+                    }
 
-
-                        cmd.Connection = conn;
+                    using (SqlCommand cmd = new SqlCommand(deleteStore, conn))
+                    {
                         cmd.Parameters.Add("@Id", SqlDbType.NVarChar, 50).Value = store.Id;
                         conn.Open();
                         int result = cmd.ExecuteNonQuery();
                         conn.Close();
-                        return result.Equals(1);
-
                     }
+
+                    return true;
                 }
             }
             catch (Exception e)
@@ -108,6 +115,8 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
+
+
         public static async Task<List<Store>> GetAllStores(string connectString)
         {
             try
