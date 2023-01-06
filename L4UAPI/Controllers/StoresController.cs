@@ -65,11 +65,13 @@ namespace L4U_WebService.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllUsers")]
+        [Route("GetAllStores")]
         public async Task<ResponseFunction> GetAllStores()
         {
             string cs = _configuration.GetConnectionString("conectorDb");
             return await StoresLogic.GetAllStores(cs);
         }
+
+
     }
 }

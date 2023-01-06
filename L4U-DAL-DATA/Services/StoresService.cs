@@ -62,7 +62,7 @@ namespace L4U_DAL_DATA.Services
 
                         cmd.Connection = conn;
 
-       cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
+                        cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
                         cmd.Parameters.Add("@Address", SqlDbType.NVarChar, 50).Value = store.Address;
                         cmd.Parameters.Add("@City", SqlDbType.NVarChar, 50).Value = store.City;
                         cmd.Parameters.Add("@District", SqlDbType.NVarChar, 50).Value = store.District;
@@ -141,5 +141,9 @@ namespace L4U_DAL_DATA.Services
                 return null;
             }
         }
+
+        
+        }
     }
-}
+    
+

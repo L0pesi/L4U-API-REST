@@ -83,6 +83,7 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
         /// <summary>
         /// This controller method retrives all products
         /// </summary>
@@ -93,6 +94,15 @@ namespace L4U_WebService.Controllers
         {
             string cs = _configuration.GetConnectionString("conectorDb");
             return await LockersLogic.GetAllLockers(cs);
+        }
+
+
+        [HttpGet]
+        [Route("GetAllLockersFromStore")]
+        public async Task<ResponseFunction> GetAllLockersFromStore(string storeId)
+        {
+            string cs = _configuration.GetConnectionString("conectorDb");
+            return await LockersLogic.GetAllLockersFromStore(cs, storeId);
         }
     }
 }
