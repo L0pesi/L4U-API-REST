@@ -9,8 +9,19 @@ using System.Net.Mail;
 
 namespace L4U_DAL_DATA.Services
 {
+    /// <summary>
+    ///  The Data Acess Layer Class of Lockers
+    /// </summary>
     public class LockersService
     {
+
+
+
+        /// <summary>
+        /// This Method Gets All Lockers in the Database
+        /// </summary>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<List<Locker>> GetAllLockers(string connectString)
         {
             try
@@ -28,16 +39,16 @@ namespace L4U_DAL_DATA.Services
                         while (reader.Read())
                         {
                             Locker locker = new Locker();
-                            locker.Id = reader.GetString(0);
+                            locker.StoreId = reader.GetString(0);
                             locker.PinCode = reader.GetString(1);
                             locker.MasterCode = reader.GetString(2);
                             locker.LockerType = reader.GetString(3);
+                            locker.LockerStatus = reader.GetBoolean(4);
+                            locker.Id = reader.GetString(5);
+                            locker.UserId = reader.GetString(6);
                             lockers.Add(locker);
                         }
-
                         return lockers;
-
-
                     }
                 }
             }
@@ -46,6 +57,7 @@ namespace L4U_DAL_DATA.Services
                 return null;
             }
         }
+
 
         /// <summary>
         /// COMENTAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -59,6 +71,7 @@ namespace L4U_DAL_DATA.Services
         {
             int rowsAffected = 0;
             string pinCode = string.Empty;
+
 
             try
             {
@@ -79,6 +92,7 @@ namespace L4U_DAL_DATA.Services
                     if (rowsAffected.Equals(1))
                     {
                         //select from database
+
                         sql = "Select pinCode FROM lockers WHERE id = @LockerId ";
                         command = new SqlCommand(sql, conn);
                         command.Parameters.AddWithValue("@LockerId", lockerId);
@@ -118,17 +132,80 @@ namespace L4U_DAL_DATA.Services
 
                 return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS };
 
+
             }
             catch (Exception e)
             {
 
                 throw;
             }
+
+
+            ////try
+            ////{
+            ////    using (SqlConnection conn = new SqlConnection(connectString))
+            ////    {
+            ////        string GetUser = "SELECT * FROM Users WHERE Id = @Id";
+            ////        using (SqlCommand cmd = new SqlCommand(GetUser))
+            ////        {
+            ////            cmd.Connection = conn;
+            ////            cmd.Parameters.AddWithValue("@Id", userId);
+
+            ////            conn.Open();
+            ////            SqlDataReader reader = cmd.ExecuteReader();
+            ////            if (reader.Read())
+            ////            {
+            ////                string email = reader.GetString(3);
+            ////                reader.Close();
+            ////                string GetLocker = "SELECT * FROM Lockers WHERE Id = @Id";
+            ////                cmd.CommandText = GetLocker;
+            ////                cmd.Parameters.Clear();
+            ////                cmd.Parameters.AddWithValue("@Id", lockerId);
+
+            ////                reader = cmd.ExecuteReader();
+            ////                if (reader.Read())
+            ////                {
+            ////                    string pinCode = reader.GetString(1);
+
+            ////                    string to = email;
+            ////                    string subject = "Locker PinCode";
+            ////                    string body = $"Your PinCode for locker {lockerId} is {pinCode}";
+
+            ////                    MailMessage mailMessage = new MailMessage();
+
+            ////                    mailMessage.From = new MailAddress("isitp2.2023@gmail.com");
+            ////                    mailMessage.To.Add(to);
+            ////                    mailMessage.Subject = subject;
+            ////                    mailMessage.Body = body;
+
+            ////                    smtpClient.Send(mailMessage);
+            ////                }
+            ////            }
+            ////            return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS };
+            ////        }
+            ////    }
+            //}
+            //catch (Exception)
+            //{
+            //    return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.INTERNALSERVERERROR };
+            //}
+
+            return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS };
         }
 
 
 
 
+
+
+
+
+        /// <summary>
+        /// This Method Adds a new Locker to the database
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> AddNewLocker(Locker locker, string connectString)
         {
 
@@ -142,18 +219,18 @@ namespace L4U_DAL_DATA.Services
                 {
 
                     string addLocker = "INSERT INTO lockers " +
-                        "(id, pinCode, masterCode, lockerType) " + //Username, City) " +
+                        "(storeid, pinCode, masterCode, lockerType) " + //Username, City) " +
                         "VALUES " +
-                        "(@Id, @PinCode, @MasterCode, @LockerType)";
+                        "(@StoreId, @PinCode,@LockerType ,@LockerType)";
 
                     using (SqlCommand cmd = new SqlCommand(addLocker))
                     {
 
                         conn.Open();
                         cmd.Connection = conn;
-                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar).Value = locker.Id;
+                        cmd.Parameters.Add("@StoreId", SqlDbType.NVarChar).Value = locker.StoreId;
                         cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = pinCode;
-                        cmd.Parameters.Add("@MasterCode", SqlDbType.NVarChar).Value = masterCode;
+                        cmd.Parameters.Add("@Mastercode", SqlDbType.NVarChar).Value = masterCode;
                         cmd.Parameters.Add("@LockerType", SqlDbType.NVarChar).Value = locker.LockerType;
 
                         int result = cmd.ExecuteNonQuery();
@@ -170,6 +247,13 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+
+
+
+        /// <summary>
+        /// Method to Generate a random Pincode
+        /// </summary>
+        /// <returns>The PinCode</returns>
         public static string GenerateRandomPinCode()
         {
             Random rnd = new Random();
@@ -177,6 +261,12 @@ namespace L4U_DAL_DATA.Services
             return pinCode.ToString();
         }
 
+
+
+        /// <summary>
+        /// Method to Generate a random Mastercode
+        /// </summary>
+        /// <returns>The MasterCode</returns>
         public static string GenerateRandomMasterCode()
         {
             Random rnd = new Random();
@@ -184,6 +274,16 @@ namespace L4U_DAL_DATA.Services
             return masterCode.ToString();
         }
 
+
+
+
+        /// <summary>
+        /// This is the controller of the Method that gives information about the availability of the locker
+        /// When it is open it's state is 0   -------------------DIOGO------------------------------------------
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> OpenLocker(Locker locker, string connectString)
         {
             try
@@ -191,11 +291,15 @@ namespace L4U_DAL_DATA.Services
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
                     conn.Open();
-                    string sql = "UPDATE lockers SET lockerStatus = 0 WHERE id = @id AND pinCode = @pinCode";
+                    string sql = "UPDATE lockers SET lockerStatus = 0 " +
+                        "WHERE storeId = @StoreId AND userId = @UserId " +
+                        "AND (pinCode = @PinCode OR masterCode = @MasterCode)";
 
                     SqlCommand command = new SqlCommand(sql, conn);
-                    command.Parameters.AddWithValue("@id", locker.Id);
-                    command.Parameters.AddWithValue("@pinCode", locker.PinCode);
+                    command.Parameters.AddWithValue("@StoreId", locker.StoreId);
+                    command.Parameters.AddWithValue("@PinCode", locker.PinCode);
+                    command.Parameters.AddWithValue("@MasterCode", locker.MasterCode);
+                    command.Parameters.AddWithValue("@UserId", locker.UserId);
 
                     int rowsAffected = command.ExecuteNonQuery();
                     return rowsAffected.Equals(1);
@@ -217,6 +321,15 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+
+
+        /// <summary>
+        /// This is the controller of the Method that gives information about the closure of the locker
+        /// When it is close it's state is 1 -------------------DIOGO------------------------------------------
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> CloseLocker(Locker locker, string connectString)
         {
             try
@@ -251,6 +364,14 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+
+
+        /// <summary>
+        /// This Method Updates a locker in the Database
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> UpdateLocker(Locker locker, string connectString)
         {
             try
@@ -284,13 +405,21 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+
+
+        /// <summary>
+        /// This Method Deletes a Locker in the Database
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> DeleteLocker(Locker locker, string connectString)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    string updateLocker = "Delete from lockers where id=@Id";
+                    string updateLocker = "Delete from lockers where id = @Id";
                     using (SqlCommand cmd = new SqlCommand(updateLocker))
                     {
 
@@ -311,5 +440,79 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
+
+
+
+        //COMENTAR----------------------------------------------
+        public static async Task<List<Locker>> GetAllLockersFromStore(string connectString, string storeLockerId)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    string getLockers = "SELECT * FROM lockers WHERE storeId = @StoreId";
+                    using (SqlCommand cmd = new SqlCommand(getLockers))
+                    {
+                        cmd.Connection = conn;
+                        cmd.Parameters.AddWithValue("@StoreId", storeLockerId);
+                        conn.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        List<Locker> lockers = new List<Locker>();
+                        while (reader.Read())
+                        {
+                            Locker locker = new Locker();
+                            locker.StoreId = reader.GetString(0);
+                            locker.PinCode = reader.GetString(1);
+                            locker.MasterCode = reader.GetString(2);
+                            locker.LockerType = reader.GetString(3);
+                            locker.LockerStatus = reader.GetBoolean(4);
+                            locker.Id = reader.GetString(5);
+                            locker.UserId = reader.GetString(6);
+                            lockers.Add(locker);
+                        }
+                        return lockers;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // handle the exception here
+                return null;
+            }
+        }
+
+        #region Material Estudo - Para implementação
+
+        /*public void AddLocker(Locker locker)
+        {
+            List<Locker> lockers = new List<Locker>();
+
+            using (SqlConnection conn = new SqlConnection(conexao))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO lockers (pinCode, masterCode, lockerType) VALUES (@PinCode, @MasterCode, @LockerType)", conn))
+
+                //using (SqlCommand cmd = new SqlCommand("INSERT INTO lockers (idClient, pinCode, masterCode, lockerType, idStore) VALUES (@IdClient, @PinCode, @MasterCode, @LockerType,@IdStore)", conn))
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    //cmd.Parameters.AddWithValue("@IdClient", locker.IdClient);
+                    cmd.Parameters.AddWithValue("@PinCode", locker.PinCode);
+                    cmd.Parameters.AddWithValue("@MasterCode", locker.MasterCode);
+                    cmd.Parameters.AddWithValue("@LockerType", locker.LockerType);
+                    //cmd.Parameters.AddWithValue("@IdStore", locker.IdStore);
+
+                    cmd.ExecuteNonQuery();
+
+                }
+            }
+
+        }*/
+
+        #endregion
+
+
+
+
     }
 }

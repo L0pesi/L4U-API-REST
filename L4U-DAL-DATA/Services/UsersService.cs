@@ -1,12 +1,22 @@
-﻿using L4U_BOL_MODEL.Models;
+using L4U_BOL_MODEL.Models;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace L4U_DAL_DATA.Services
 {
+    /// <summary>
+    /// The Data Acess Layer Class of Users
+    /// </summary>
     public class UsersService
     {
 
+
+
+        /// <summary>
+        /// This Method gets all users from the database
+        /// </summary>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<List<User>> GetAllUsers(string connectString)
         {
             try
@@ -41,6 +51,8 @@ namespace L4U_DAL_DATA.Services
                 return null;
             }
         }
+
+
 
         /// <summary>
         /// This method adds a User to the database
@@ -81,6 +93,15 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
+
+
+
+        /// <summary>
+        /// This method Authenticates a User on the Database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<User> Authenticate(UserAuth user, string connectString)
         {
             User authUser = new User();
@@ -89,9 +110,9 @@ namespace L4U_DAL_DATA.Services
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
 
-                    string addUser = " SELECT * FROM users  " +
+                    string addUser = " SELECT TOP 1 * FROM users  " +
                                      " WHERE " +
-                                     " email = @Email AND[password] = @Pass " +
+                                     " email = @Email " +
                                      " AND isActive = 1";
                     using (SqlCommand cmd = new SqlCommand(addUser))
                     {
@@ -102,16 +123,20 @@ namespace L4U_DAL_DATA.Services
                         cmd.Connection = conn;
 
                         cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 50).Value = user.Email;
-                        cmd.Parameters.Add("@Pass", SqlDbType.NVarChar, 50).Value = user.Password;
+                        //cmd.Parameters.Add("@Pass", SqlDbType.NVarChar, 50).Value = user.Password;
 
-                        var x = cmd.ExecuteScalar();
+                        using(DataTable dt = new DataTable())
+                        {
+                            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                            {
+                                da.Fill(dt);
+                            }
 
-                        //conn.Open();
-                        authUser = new User(x);
-                        //Console.WriteLine(cmd.ExecuteScalarAsync());
-                        //MessageBox.Show(x.GetType());
-                        var y = x.GetType();
+                            authUser = new User(dt.Rows[0]);
+                        }
+
                         conn.Close();
+
                         return authUser;
 
                     }
@@ -123,6 +148,14 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+
+
+        /// <summary>
+        /// This method Updates info of a user on de Database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> UpdateUser(User user, string connectString)
         {
             try
@@ -156,6 +189,14 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+
+
+        /// <summary>
+        /// This method Deletes a User on the Database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> DeleteUser(User user, string connectString)
         {
             try
@@ -183,5 +224,151 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
+
+
+
+        #region Material estudo - para implementação
+
+        /*
+        public void UpdateUser(User user)
+        {
+            List<User> users = new List<User>();
+
+            using (SqlConnection conn = new SqlConnection(connect))
+            {
+                conn.Open();
+                //using (SqlCommand cmd = new SqlCommand("UPDATE users SET id = @Id, firstName = @FirstName,  lastName = @LastName , email = @Email, password = @Password", conn))
+                using (SqlCommand cmd = new SqlCommand("UPDATE users SET firstName = @FirstName, lastName = @LastName , email = @Email, password = @Password WHERE id = @Id", conn))
+
+                {
+
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.AddWithValue("@Id", user.Id);
+                    cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+                    cmd.Parameters.AddWithValue("@LastName", user.LastName);
+                    cmd.Parameters.AddWithValue("@Email", user.Email);
+                    cmd.Parameters.AddWithValue("@Password", user.Password);
+
+                    cmd.ExecuteNonQuery();
+
+                }
+            }
+        }
+
+        /// <summary>
+        /// Lista todos os utilizadores
+        /// </summary>
+        /// <returns></returns>
+        public List<User> GetUsers()
+        {
+            List<User> users = new List<User>();
+
+            using (SqlConnection conn = new SqlConnection(connect))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Users", conn))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader != null)
+                        {
+                            while (reader.Read())
+                            {
+                                var user = new User();
+                                user.FirstName = reader["FirstName"].ToString();
+                                user.LastName = reader["LastName"].ToString();
+                                user.Email = reader["Email"].ToString();
+                                user.UserName = reader["Username"].ToString();
+                                user.City = reader["City"].ToString();
+
+                                users.Add(user);
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            return users;
+        }
+
+
+
+
+
+
+        #region Versão com STORED PROCEDURES
+
+        /*
+
+        /// <summary>
+        /// This method adds a User to the database
+        /// </summary>
+        /// <param name="user">User object</param>
+        /// <param name="appPath">Application path</param>
+        /// <returns>True if succeed, false otherwise</returns>
+        public static async Task<string> AddNewUser(User user, string appPath)
+        {
+
+            SqlParameter p1 = new SqlParameter("@firstName", SqlDbType.NVarChar, 100);
+            SqlParameter p2 = new SqlParameter("@lastName", SqlDbType.NVarChar, 50);
+            SqlParameter p3 = new SqlParameter("@username", SqlDbType.NVarChar, 50);
+            SqlParameter p4 = new SqlParameter("@userPassword", SqlDbType.NVarChar, 250);
+            SqlParameter p5 = new SqlParameter("@email", SqlDbType.NVarChar, 250);
+            SqlParameter p6 = new SqlParameter("@city", SqlDbType.NVarChar, 250);
+            SqlParameter p7 = new SqlParameter("@id", SqlDbType.NVarChar, 50);
+
+            p1.Value = user.FirstName ?? string.Empty;
+            p2.Value = user.LastName;
+            p3.Value = user.UserName;
+            p4.Value = user.Password;
+            p5.Value = user.Email;
+            p6.Value = user.City;
+            p7.Direction = ParameterDirection.Output;
+
+            string result = (string)await GeneralProcedureCall.CallStoredProcedure<User>(
+                SqlEnumTypes.Insert,
+                StoreProcedures.AddNewUser,
+                appPath,
+                parameters: new SqlParameter[] { p1, p2, p3, p4, p5, p6, p7 });
+            return result;
+
+        }
+
+
+
+        /// <summary>
+        /// This method deletes a user on the database
+        /// </summary>
+        /// <param name="userUid">user's unique id</param>
+        /// <param name="appPath">Application path</param>
+        /// <returns>True if succeed, false otherwise</returns>
+        public static async Task<bool> DeleteUser(string userUid, string appPath)
+        {
+
+
+            SqlParameter p1 = new SqlParameter("@Uid", SqlDbType.NVarChar, 50);
+            p1.Value = userUid;
+            bool result = (bool)await GeneralProcedureCall.CallStoredProcedure<User>(
+                SqlEnumTypes.Delete,
+                StoreProcedures.DeleteUser,
+                appPath,
+                parameters: new SqlParameter[] { p1 });
+
+            return result;
+
+        }
+       
+            
+
+        #endregion
+
+        */
+
+        #endregion
+
+
+
     }
 }

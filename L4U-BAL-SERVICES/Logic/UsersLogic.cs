@@ -13,10 +13,21 @@ using L4U_BAL_SERVICES.Utilities;
 
 namespace L4U_BAL_SERVICES.Logic
 {
+    /// <summary>
+    /// The Business Acess Layer Class of Users
+    /// </summary>
     public class UsersLogic
     {
 
-        
+
+
+        /// <summary>
+        /// This method adds a User to the database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static async Task<ResponseFunction> AddNewUser(User user, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);
@@ -49,6 +60,14 @@ namespace L4U_BAL_SERVICES.Logic
         }
 
 
+
+        /// <summary>
+        /// This method Authenticates an User
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static async Task<ResponseFunction> AuthenticateUser(UserAuth user, string connectString)
         {
             if (string.IsNullOrEmpty(user.Email))
@@ -60,6 +79,9 @@ namespace L4U_BAL_SERVICES.Logic
             try
             {
                 User userAuth = await UsersService.Authenticate(user, connectString);
+
+                if(userAuth == null)
+                    throw new Exception("Utilizador não encontrado");
 
                 if (user.Password.Equals(Criptography.Decrypt(userAuth.Password)))
                 {
@@ -86,11 +108,20 @@ namespace L4U_BAL_SERVICES.Logic
             return response;
         }
 
+
+
+        /// <summary>
+        /// This method Updates a User to the database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static async Task<ResponseFunction> UpdateUser(User user, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);
             if (!user.IsValid()) throw new Exception("Propriedades não intanciadas");
-
+            user.Password = Criptography.Encrypt(user.Password);
             ResponseFunction response = new ResponseFunction();
             try
             {
@@ -119,13 +150,11 @@ namespace L4U_BAL_SERVICES.Logic
 
 
 
-
-
         /// <summary>
-        /// This method calls the necessary service to get all productStore and based on the response, builds up the response
+        /// This method Gets all Users and based on the response, builds up the response
         /// </summary>
-        /// <param name="appPath">Application path</param>
-        /// <returns>List of products</returns>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<ResponseFunction> GetAllUsers(string connectString)
         {
             List<User> pList = await UsersService.GetAllUsers(connectString);
@@ -133,6 +162,8 @@ namespace L4U_BAL_SERVICES.Logic
 
             return BuildReponseFromList(pList);
         }
+
+
 
         /// <summary>
         /// This is a generic method to build the response object from a response list
@@ -165,6 +196,13 @@ namespace L4U_BAL_SERVICES.Logic
         }
 
 
+
+        /// <summary>
+        /// This method Deletes a User on the database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<ResponseFunction> DeleteUser(User user, string connectString)
         {
             bool b = await UsersService.DeleteUser(user, connectString);
@@ -178,6 +216,10 @@ namespace L4U_BAL_SERVICES.Logic
                 };
             return StandardResponse.Error();
         }
+
+
+        #region Material Estudo - para implementação
+
         /*
 
         /// <summary>
@@ -295,6 +337,8 @@ namespace L4U_BAL_SERVICES.Logic
         
         #endregion
         */
+
+        #endregion
 
 
     }

@@ -11,6 +11,11 @@ namespace L4U_WebService.Controllers
     [Route("api/[controller]")]
     public class WeatherController
     {
+
+        /// <summary>
+        /// Get Weather Forecast Controller - API WEB SERVICE EXTERN
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("GetWeatherForecast")]
         public async Task<ResponseFunction> GetWeatherForecast()

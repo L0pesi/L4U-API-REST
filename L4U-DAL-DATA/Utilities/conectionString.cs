@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace L4U_DAL_DATA.Utilities
 {
+
+    /// <summary>
+    /// General Configuration of Connection String v1
+    /// </summary>
     public class conectionString
     {
         public string Server { get; set; }

@@ -1,3 +1,6 @@
+using Newtonsoft.Json;
+using System.Data;
+
 namespace L4U_BOL_MODEL.Models
 {
     public class User
@@ -13,7 +16,7 @@ namespace L4U_BOL_MODEL.Models
 
         //public List<User> users { get; set; } = null;
 
-
+        [JsonIgnore]
         public string Password { get; set; }
 
         public string Token { get; set; } = string.Empty;
@@ -24,30 +27,28 @@ namespace L4U_BOL_MODEL.Models
         { }
 
 
-
-        /*public User(string id)
-        {
-            this.Id = id;
-        }*/
-
         public User(object obj)
         {
             this.Id = obj.ToString();
 
         }
 
-
-
-        //fazer data row?
+        public User(DataRow dr)
+        {
+            this.Id = dr["id"].ToString();
+            this.FirstName = dr["firstName"].ToString();
+            this.LastName = dr["lastName"].ToString();
+            this.Email = dr["email"].ToString();
+            this.Password = dr["password"].ToString();
+        }
 
         public bool IsValid()
         {
-            //if (string.IsNullOrEmpty(this.UserName)) return false;
-            if (string.IsNullOrEmpty(this.Password)) return false;
+
             if (string.IsNullOrEmpty(this.FirstName)) return false;
             if (string.IsNullOrEmpty(this.LastName)) return false;
             if (string.IsNullOrEmpty(this.Email)) return false;
-            //if (string.IsNullOrEmpty(this.City)) return false;
+            if (string.IsNullOrEmpty(this.Password)) return false;
 
             return true;
         }

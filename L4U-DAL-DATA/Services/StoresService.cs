@@ -4,9 +4,20 @@ using System.Data.SqlClient;
 
 namespace L4U_DAL_DATA.Services
 {
+    /// <summary>
+    ///  The Data Acess Layer Class of Stores
+    /// </summary>
     public class StoresService
     {
 
+
+
+        /// <summary>
+        /// This Method Adds a new Store to the Database
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> AddNewStore(Store store, string connectString)
         {
 
@@ -44,6 +55,14 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+
+
+        /// <summary>
+        /// This method Udates a Store in the Database
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> UpdateStore(Store store, string connectString)
 
         {
@@ -62,7 +81,7 @@ namespace L4U_DAL_DATA.Services
 
                         cmd.Connection = conn;
 
-       cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
+                        cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
                         cmd.Parameters.Add("@Address", SqlDbType.NVarChar, 50).Value = store.Address;
                         cmd.Parameters.Add("@City", SqlDbType.NVarChar, 50).Value = store.City;
                         cmd.Parameters.Add("@District", SqlDbType.NVarChar, 50).Value = store.District;
@@ -82,25 +101,40 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+
+
+        /// <summary>
+        /// This Method Deletes a Store in the Database
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> DeleteStore(Store store, string connectString)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    string updateLocker = "Delete from stores where id=@Id";
-                    using (SqlCommand cmd = new SqlCommand(updateLocker))
+                    string deleteLocker = "DELETE FROM lockers WHERE id = @Id";
+                    string deleteStore = "DELETE FROM stores WHERE id = @Id";
+
+                    using (SqlCommand cmd = new SqlCommand(deleteLocker, conn))
                     {
+                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar, 50).Value = store.Id;
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();                
+                        conn.Close();
+                    }
 
-
-                        cmd.Connection = conn;
+                    using (SqlCommand cmd = new SqlCommand(deleteStore, conn))
+                    {
                         cmd.Parameters.Add("@Id", SqlDbType.NVarChar, 50).Value = store.Id;
                         conn.Open();
                         int result = cmd.ExecuteNonQuery();
                         conn.Close();
-                        return result.Equals(1);
-
                     }
+
+                    return true;
                 }
             }
             catch (Exception)
@@ -108,6 +142,15 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
+
+
+
+
+        /// <summary>
+        /// This Method Gets All Stores in the Database
+        /// </summary>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<List<Store>> GetAllStores(string connectString)
         {
             try
@@ -141,5 +184,16 @@ namespace L4U_DAL_DATA.Services
                 return null;
             }
         }
+
+
+        
+        }
+
+
+        #region Material Estudo - para implementação
+
+        #endregion
+
     }
-}
+    
+
