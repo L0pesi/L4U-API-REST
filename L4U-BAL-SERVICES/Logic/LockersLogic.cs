@@ -13,20 +13,27 @@ using Microsoft.Extensions.Logging;
 
 namespace L4U_BAL_SERVICES.Logic
 {
+    /// <summary>
+    /// The Business Acess Layer Class of Lockers
+    /// </summary>
     public class LockersLogic
     {
-
         private readonly LockersService _lockerService;
 
         public LockersLogic()
         {
-
             _lockerService = new LockersService();
-
         }
 
 
 
+        /// <summary>
+        ///  This method adds a New Locker to the Database 
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static async Task<ResponseFunction> AddNewLocker(Locker locker, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);
@@ -58,6 +65,15 @@ namespace L4U_BAL_SERVICES.Logic
             return response;
         }
 
+
+
+        /// <summary>
+        /// This is the controller of the Method that gives information about the availability of the locker
+        /// When it is open it's state is 0 -----------------VER COM DIOGO CORRECÇÃO ------------------------------
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<ResponseFunction> OpenLocker(Locker locker, string connectString)
         {
             
@@ -87,6 +103,15 @@ namespace L4U_BAL_SERVICES.Logic
             return response;
         }
 
+
+
+        /// <summary>
+        /// This is the controller of the Method that gives information about the closure of the locker
+        /// When it is close it's state is 1  -----------------VER COM DIOGO CORRECÇÃO ------------------------------
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<ResponseFunction> CloseLocker(Locker locker, string connectString)
         {
 
@@ -116,6 +141,15 @@ namespace L4U_BAL_SERVICES.Logic
             return response;
         }
 
+
+
+        /// <summary>
+        /// This method updattes a locker in the database
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static async Task<ResponseFunction> UpdateLocker(Locker locker, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);
@@ -147,8 +181,13 @@ namespace L4U_BAL_SERVICES.Logic
             return response;
         }
 
-        
 
+        /// <summary>
+        /// This method deletes a locker in the Database
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<ResponseFunction> DeleteLocker(Locker locker, string connectString)
         {
             bool b = await LockersService.DeleteLocker(locker, connectString);
@@ -163,11 +202,13 @@ namespace L4U_BAL_SERVICES.Logic
             return StandardResponse.Error();
         }
 
+
+
         /// <summary>
-        /// This method calls the necessary service to get all productStore and based on the response, builds up the response
+        /// This method retrieves all Lockers and based on the response, builds up the response
         /// </summary>
-        /// <param name="appPath">Application path</param>
-        /// <returns>List of products</returns>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<ResponseFunction> GetAllLockers(string connectString)
         {
             List<Locker> pList = await LockersService.GetAllLockers(connectString);
@@ -175,6 +216,8 @@ namespace L4U_BAL_SERVICES.Logic
 
             return BuildReponseFromList(pList);
         }
+
+
 
         /// <summary>
         /// This is a generic method to build the response object from a response list
@@ -205,6 +248,12 @@ namespace L4U_BAL_SERVICES.Logic
                 Data = list
             };
         }
+
+
+        #region Material estudo - para implementação
+
+        #endregion
+
 
     }
 }

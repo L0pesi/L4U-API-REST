@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace L4U_WebService.Controllers
 {
+    /// <summary>
+    /// This is the controller class, responsible to receive and handle all Locker's request
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class LockerController : ControllerBase
     {
-
 
         private readonly IConfiguration _configuration;
 
@@ -18,6 +20,13 @@ namespace L4U_WebService.Controllers
             _configuration = configuration;
         }
 
+
+
+        /// <summary>
+        /// This is the controller of AddNewLocker Method
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <returns></returns>
         [HttpPost("AddNewLocker")]
         public async Task<IActionResult> AddNewLocker(Locker locker)
         {
@@ -31,6 +40,14 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
+
+        /// <summary>
+        /// This is the controller of the Method that gives information about the availability of the locker
+        /// When it is open it's state is 0
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <returns></returns>
         [HttpPut("OpenLocker")]
         public async Task<IActionResult> OpenLocker(Locker locker)
         {
@@ -44,6 +61,14 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
+
+        /// <summary>
+        /// This is the controller of the Method that gives information about the closure of the locker
+        /// When it is close it's state is 1 
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <returns></returns>
         [HttpPut("CloseLocker")]
         public async Task<IActionResult> CloseLocker(Locker locker)
         {
@@ -57,6 +82,13 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
+
+        /// <summary>
+        /// This is the controller of UpdateLocker Method
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <returns></returns>
         [HttpPut("UpdateLockerById")]
         public async Task<IActionResult> UpdateLocker(Locker locker)
         {
@@ -70,6 +102,13 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
+
+        /// <summary>
+        /// This is the controller of DeleteLocker Method
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <returns></returns>
         [HttpDelete("DeleteLocker")]
         public async Task<IActionResult> DeleteLocker(Locker locker)
         {
@@ -83,10 +122,12 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
+
         /// <summary>
-        /// This controller method retrives all products
+        /// This controller method retrives all Lockers
         /// </summary>
-        /// <returns>List of products</returns>
+        /// <returns>List of Lockers</returns>
         [HttpGet]
         [Route("GetAllLockers")]
         public async Task<ResponseFunction> GetAllLockers()
@@ -94,5 +135,14 @@ namespace L4U_WebService.Controllers
             string cs = _configuration.GetConnectionString("conectorDb");
             return await LockersLogic.GetAllLockers(cs);
         }
+
+
+
+        #region Material de estudo - para implementar
+
+        #endregion
+
+
+
     }
 }
