@@ -11,7 +11,6 @@ namespace L4U_WebService.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class LockerController : ControllerBase
     {
 
@@ -137,7 +136,7 @@ namespace L4U_WebService.Controllers
         //COMENTAR----------------------------------------------
         [HttpGet]
         [Route("GetAllLockersFromStore")]
-        public async Task<ResponseFunction> GetAllLockersFromStore([FromBody] RequestStoreIdModel request)
+        public async Task<ResponseFunction> GetAllLockersFromStore([FromQuery] RequestStoreIdModel request)
         {
             string cs = _configuration.GetConnectionString("conectorDb");
             return await LockersLogic.GetAllLockersFromStore(cs, request.StoreId);
