@@ -147,31 +147,28 @@ https://www.geeksforgeeks.org/what-is-net-3-tier-architecture/
 This are the instructions on setting up the project locally.
 To get a local copy up and running follow these simple example steps.
 
+
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
+Here are the Pre-requisites for the API:
+* Free will
   ```sh
-  npm install npm@latest -g
+  Free Will and clear mind
   ```
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app._
+_Below is an instruct on installing and setting up your app._
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://github.com/L0pesi/L4U-API-REST.git
    ```
-3. Install NPM packages
-   ```sh
-   npm install
+3. Install 
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
+   install
    ```
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
