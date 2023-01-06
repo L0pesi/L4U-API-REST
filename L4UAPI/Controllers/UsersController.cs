@@ -1,8 +1,15 @@
 ﻿using L4U_BAL_SERVICES.Logic;
 using L4U_BOL_MODEL.Models;
+using L4U_BOL_MODEL.Utilities;
 using L4U_BOL_MODEL.Response;
+using L4U_WebService.Utilities;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using StatusCodes = L4U_BOL_MODEL.Utilities.StatusCodes;
 
 namespace L4U_WebService.Controllers
 {
@@ -15,10 +22,11 @@ namespace L4U_WebService.Controllers
     {
 
         private readonly IConfiguration _configuration;
-
-        public UsersController(IConfiguration configuration)
+        private readonly AppSettings appSettings;
+        public UsersController(IConfiguration configuration, IOptions<AppSettings> _appSettings)
         {
             _configuration = configuration;
+            appSettings = _appSettings.Value;
         }
 
 
@@ -53,9 +61,16 @@ namespace L4U_WebService.Controllers
         {
             string cs = _configuration.GetConnectionString("conectorDb");
             ResponseFunction response = await UsersLogic.AuthenticateUser(user, cs);
-            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+
+
+            if (response.StatusCode.Equals(StatusCodes.SUCCESS))
             {
-                return StatusCode((int)response.StatusCode);
+
+                User temp = (User)response.Data;
+
+                temp.Token = GenerateJwtToken(temp);
+                response.Data = temp;
+
             }
             return new JsonResult(response);
         }
@@ -240,7 +255,7 @@ namespace L4U_WebService.Controllers
 
         #region Generate Token - Implementar Mais tarde
 
-        /*
+
 
         /// <summary>
         /// This method generates the token
@@ -263,7 +278,7 @@ namespace L4U_WebService.Controllers
         }
 
 
-        */
+
         #endregion
 
 

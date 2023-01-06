@@ -38,12 +38,13 @@ namespace L4U_DAL_DATA.Services
                         while (reader.Read())
                         {
                             Locker locker = new Locker();
-                            locker.Id = reader.GetString(0);
+                            locker.StoreId = reader.GetString(0);
                             locker.PinCode = reader.GetString(1);
                             locker.MasterCode = reader.GetString(2);
                             locker.LockerType = reader.GetString(3);
                             locker.LockerStatus = reader.GetBoolean(4);
-                            locker.LockerId = reader.GetString(5);
+                            locker.Id = reader.GetString(5);
+                            locker.UserId = reader.GetString(6);
                             lockers.Add(locker);
                         }
                         return lockers;
@@ -58,8 +59,11 @@ namespace L4U_DAL_DATA.Services
 
 
         //COMENTAR----------------------------------------------
-        public static async Task<ResponseFunction> ChooseLocker(string connectString, string userId, string lockerId)
+        public static async Task<ResponseFunction> ChooseLocker(string connectString, string userId, string email, string lockerId)
         {
+            int rowsAffected = 0;
+            string pinCode = string.Empty;
+
             var config = new ConfigurationBuilder()
                  .SetBasePath(Directory.GetCurrentDirectory())
                  .AddJsonFile("appsettings.json")
@@ -78,50 +82,94 @@ namespace L4U_DAL_DATA.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    string GetUser = "SELECT * FROM Users WHERE Id = @Id";
-                    using (SqlCommand cmd = new SqlCommand(GetUser))
+                    conn.Open();
+                    string sql = "UPDATE lockers SET lockerStatus = 1, " +
+                        " userId = @UserId " +
+                        "WHERE id = @LockerId ";
+
+                    SqlCommand command = new SqlCommand(sql, conn);
+                    command.Parameters.AddWithValue("@LockerId", lockerId);
+                    command.Parameters.AddWithValue("@UserId", userId);
+
+                    rowsAffected = command.ExecuteNonQuery();
+                  
+                    command.Dispose();
+                    if(rowsAffected.Equals(1))
                     {
-                        cmd.Connection = conn;
-                        cmd.Parameters.AddWithValue("@Id", userId);
+                        //select à bd
+                        sql = "Select pinCode FROM lockers WHERE id = @LockerId ";
+                        command = new SqlCommand(sql, conn);
+                        command.Parameters.AddWithValue("@LockerId", lockerId);
 
-                        conn.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        if (reader.Read())
-                        {
-                            string email = reader.GetString(3);
-                            reader.Close();
-                            string GetLocker = "SELECT * FROM Lockers WHERE Id = @Id";
-                            cmd.CommandText = GetLocker;
-                            cmd.Parameters.Clear();
-                            cmd.Parameters.AddWithValue("@Id", lockerId);
+                        pinCode = (string)command.ExecuteScalar();
 
-                            reader = cmd.ExecuteReader();
-                            if (reader.Read())
-                            {
-                                string pinCode = reader.GetString(1);
-
-                                string to = email;
-                                string subject = "Locker PinCode";
-                                string body = $"Your PinCode for locker {lockerId} is {pinCode}";
-
-                                MailMessage mailMessage = new MailMessage();
-
-                                mailMessage.From = new MailAddress("isitp2.2023@gmail.com");
-                                mailMessage.To.Add(to);
-                                mailMessage.Subject = subject;
-                                mailMessage.Body = body;
-
-                                smtpClient.Send(mailMessage);
-                            }
-                        }
-                        return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS };
                     }
+
                 }
+
+                if(rowsAffected.Equals(1) && !string.IsNullOrEmpty(pinCode))
+                {
+                    //sends email with pincode
+                }
+
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.INTERNALSERVERERROR };
+
+                throw;
             }
+
+
+            ////try
+            ////{
+            ////    using (SqlConnection conn = new SqlConnection(connectString))
+            ////    {
+            ////        string GetUser = "SELECT * FROM Users WHERE Id = @Id";
+            ////        using (SqlCommand cmd = new SqlCommand(GetUser))
+            ////        {
+            ////            cmd.Connection = conn;
+            ////            cmd.Parameters.AddWithValue("@Id", userId);
+
+            ////            conn.Open();
+            ////            SqlDataReader reader = cmd.ExecuteReader();
+            ////            if (reader.Read())
+            ////            {
+            ////                string email = reader.GetString(3);
+            ////                reader.Close();
+            ////                string GetLocker = "SELECT * FROM Lockers WHERE Id = @Id";
+            ////                cmd.CommandText = GetLocker;
+            ////                cmd.Parameters.Clear();
+            ////                cmd.Parameters.AddWithValue("@Id", lockerId);
+
+            ////                reader = cmd.ExecuteReader();
+            ////                if (reader.Read())
+            ////                {
+            ////                    string pinCode = reader.GetString(1);
+
+            ////                    string to = email;
+            ////                    string subject = "Locker PinCode";
+            ////                    string body = $"Your PinCode for locker {lockerId} is {pinCode}";
+
+            ////                    MailMessage mailMessage = new MailMessage();
+
+            ////                    mailMessage.From = new MailAddress("isitp2.2023@gmail.com");
+            ////                    mailMessage.To.Add(to);
+            ////                    mailMessage.Subject = subject;
+            ////                    mailMessage.Body = body;
+
+            ////                    smtpClient.Send(mailMessage);
+            ////                }
+            ////            }
+            ////            return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS };
+            ////        }
+            ////    }
+            //}
+            //catch (Exception)
+            //{
+            //    return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.INTERNALSERVERERROR };
+            //}
+
+            return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS };
         }
 
 
@@ -222,11 +270,15 @@ namespace L4U_DAL_DATA.Services
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
                     conn.Open();
-                    string sql = "UPDATE lockers SET lockerStatus = 0 WHERE id = @id AND pinCode = @pinCode";
+                    string sql = "UPDATE lockers SET lockerStatus = 0 " +
+                        "WHERE storeId = @StoreId AND userId = @UserId " +
+                        "AND (pinCode = @PinCode OR masterCode = @MasterCode)";
 
                     SqlCommand command = new SqlCommand(sql, conn);
-                    command.Parameters.AddWithValue("@id", locker.Id);
-                    command.Parameters.AddWithValue("@pinCode", locker.PinCode);
+                    command.Parameters.AddWithValue("@StoreId", locker.StoreId);
+                    command.Parameters.AddWithValue("@PinCode", locker.PinCode);
+                    command.Parameters.AddWithValue("@MasterCode", locker.MasterCode);
+                    command.Parameters.AddWithValue("@UserId", locker.UserId);
 
                     int rowsAffected = command.ExecuteNonQuery();
                     return rowsAffected.Equals(1);
@@ -346,14 +398,14 @@ namespace L4U_DAL_DATA.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    string updateLocker = "Delete from lockers where LockerId=@Id";
+                    string updateLocker = "Delete from lockers where id = @Id";
                     using (SqlCommand cmd = new SqlCommand(updateLocker))
                     {
 
                         //cmd.CommandType = CommandType.Text;
 
                         cmd.Connection = conn;
-                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar).Value = locker.LockerId;
+                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar).Value = locker.Id;
                         conn.Open();
                         int result = cmd.ExecuteNonQuery();
                         conn.Close();
@@ -377,23 +429,24 @@ namespace L4U_DAL_DATA.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    string getLockers = "SELECT lockers.* FROM lockers INNER JOIN stores ON lockers.id = stores.id WHERE stores.id = @storeId";
+                    string getLockers = "SELECT * FROM lockers WHERE storeId = @StoreId";
                     using (SqlCommand cmd = new SqlCommand(getLockers))
                     {
                         cmd.Connection = conn;
-                        cmd.Parameters.AddWithValue("@storeId", storeId);
+                        cmd.Parameters.AddWithValue("@StoreId", storeId);
                         conn.Open();
                         SqlDataReader reader = cmd.ExecuteReader();
                         List<Locker> lockers = new List<Locker>();
                         while (reader.Read())
                         {
                             Locker locker = new Locker();
-                            locker.Id = reader.GetString(0);
+                            locker.StoreId = reader.GetString(0);
                             locker.PinCode = reader.GetString(1);
                             locker.MasterCode = reader.GetString(2);
                             locker.LockerType = reader.GetString(3);
                             locker.LockerStatus = reader.GetBoolean(4);
-                            //locker.LockerId = reader.GetString(5);
+                            locker.Id = reader.GetString(5);
+                            locker.UserId = reader.GetString(6);
                             lockers.Add(locker);
                         }
                         return lockers;

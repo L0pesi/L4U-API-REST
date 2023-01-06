@@ -9,7 +9,9 @@ namespace L4U_BOL_MODEL.Models
 {
     public class Locker
     {
-        public string Id { get; set; }
+        public string Id { get; set; } //Locker id
+        public string StoreId { get; set; }
+        public string UserId { get; set; }
 
         public string PinCode { get; set; }
 
@@ -19,7 +21,6 @@ namespace L4U_BOL_MODEL.Models
 
         public bool LockerStatus { get; set; }
 
-        public string LockerId { get; set; } //ver como fica
 
         //public List<Locker> lockers { get; set; } = null;
 
@@ -31,7 +32,8 @@ namespace L4U_BOL_MODEL.Models
         public bool IsLockerValid()
         {
             if (string.IsNullOrEmpty(this.PinCode)) return false;
-            if (string.IsNullOrEmpty(this.MasterCode)) return false;
+            if (string.IsNullOrEmpty(this.StoreId)) return false;
+            if (string.IsNullOrEmpty(this.UserId)) return false;
             if (string.IsNullOrEmpty(this.LockerType)) return false;
 
             return true;
