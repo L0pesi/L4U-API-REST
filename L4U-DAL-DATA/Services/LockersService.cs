@@ -37,10 +37,7 @@ namespace L4U_DAL_DATA.Services
                             locker.LockerType = reader.GetString(3);
                             lockers.Add(locker);
                         }
-
                         return lockers;
-
-
                     }
                 }
             }
