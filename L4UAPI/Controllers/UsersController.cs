@@ -2,10 +2,7 @@
 using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Text.Json.Serialization;
-using static L4U_WebService.Controllers.UsersController;
-using JsonIgnoreAttribute = Newtonsoft.Json.JsonIgnoreAttribute;
+
 
 namespace L4U_WebService.Controllers
 {
@@ -24,6 +21,13 @@ namespace L4U_WebService.Controllers
             _configuration = configuration;
         }
 
+
+
+        /// <summary>
+        /// This is the controller of AddNewUser Method
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         //[Authorize]
         [HttpPost("AddNewUser")]
         public async Task<IActionResult> AddNewUser(User user)
@@ -37,6 +41,13 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
+
+        /// <summary>
+        /// This is the controller of Authenticate Method
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost("authenticate")]
         public async Task<IActionResult> AuthenticateMe(UserAuth user)
         {
@@ -49,6 +60,17 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
+        #region LOGIN METHOD - TRIAL VERSION
+
+        #endregion
+
+
+        /// <summary>
+        /// This is the controller of DeleteUser Method
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUser(User user)
         {
@@ -63,6 +85,13 @@ namespace L4U_WebService.Controllers
         }
 
 
+
+
+        /// <summary>
+        /// This is the controller of Update Method
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser(User user)
         {
@@ -76,6 +105,12 @@ namespace L4U_WebService.Controllers
             return new JsonResult(response);
         }
 
+
+
+        /// <summary>
+        /// This is the controller of GetAllUsers Method
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("GetAllUsers")]
         public async Task<ResponseFunction> GetAllUsers()
@@ -83,16 +118,127 @@ namespace L4U_WebService.Controllers
             string cs = _configuration.GetConnectionString("conectorDb");
             return await UsersLogic.GetAllUsers(cs);
         }
- 
-        
-    
+
+
+        #region Ideias AF
+
         //inativar user => definir o bit isActive = 0
 
         //Login => WHERE isActive = 1
 
-        #region Generate Token - Mais tarde
+        #endregion
 
 
+        #region Codigo antigo com material de estudo
+
+        /*
+        // POST
+        // ADICIONAR NOVO UTILIZADOR
+        // api/<UsersController>
+        [HttpPost]
+        public void Post([FromBody] User user)
+        {
+
+            _usersLogic.AddNewUser(user);
+
+        }
+        /*
+
+
+        // GET
+        // LISTAR TODOS UTILIZADORES
+        // api/<UsersController>
+        [HttpGet]
+        public IEnumerable<User> Get()
+        {
+            return _usersLogic.GetUsers;
+        }
+
+        [HttpPut]
+        public void Putt([FromBody] User user)
+        {
+
+            _usersLogic.UpdateUser(user);
+
+        }
+
+
+        #region Versão com erros - Stored Procedures
+
+        /*
+          
+        
+        /// <summary>
+        /// Application path
+        /// </summary>
+        private string appPath;
+
+        /// <summary>
+        /// App settings class
+        /// </summary>
+        private readonly AppSettings appSettings;
+
+        /// <summary>
+        /// Constructor
+        /// Implementação do webHostEnvironment (com as duas declarações anteriores)
+        /// </summary>
+        /// <param name="webHostEnvironment">Dependecy injection of IWebHostEnvironment interface</param>
+        public UsersController(IWebHostEnvironment webHostEnvironment, IOptions<AppSettings> _appSettings)
+        {
+            this.appPath = webHostEnvironment.ContentRootPath;
+            this.appSettings = _appSettings.Value;
+        }
+        
+          
+          
+         
+        [HttpPost]
+        [Route("create")]
+        public async Task<ResponseFunction> AddNewUser([FromBody] User request)
+        {
+
+            if (!ModelState.IsValid)
+                return StandardResponse.InvalidRequestResponse();
+            return await UsersLogic.AddNewUser(request, appPath);
+
+        }
+
+        [HttpDelete]
+        [Route("delete")]
+        public async Task<ResponseFunction> DeleteUser([FromBody] RequestModel request)
+        {
+            if (!ModelState.IsValid)
+                return StandardResponse.InvalidRequestResponse();
+            return await UsersLogic.DeleteUser(request.Uid, appPath);
+        }
+
+        
+        [HttpPost]
+        [Route("login")]
+        public async Task<Response> Login([FromBody] UserRequestMin request)
+        {
+            if (!ModelState.IsValid)
+                return StandardResponse.InvalidRequestResponse();
+
+            Response AuthUser = await UsersLogic.LoginUser(request, appPath);
+
+            //adds token jwt
+            User temp = (User)AuthUser.Data;
+            temp.Token = GenerateJwtToken(temp);
+
+            AuthUser.Data = temp;
+
+            return AuthUser;
+        }
+
+        
+        #endregion
+        */
+
+        #endregion
+
+
+        #region Generate Token - Implementar Mais tarde
 
         /*
 
@@ -119,6 +265,8 @@ namespace L4U_WebService.Controllers
 
         */
         #endregion
- 
+
+
+
     }
 }

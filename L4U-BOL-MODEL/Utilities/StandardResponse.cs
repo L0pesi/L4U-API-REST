@@ -43,6 +43,11 @@ namespace L4U_BOL_MODEL.Utilities
             Data = null
         };
 
+
+        /// <summary>
+        /// This method returns a response object with status code ERROR
+        /// </summary>
+        /// <returns></returns>
         public static ResponseFunction Error() => new ResponseFunction
         {
             StatusCode = StatusCodes.INTERNALSERVERERROR,

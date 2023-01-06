@@ -4,6 +4,18 @@ using Newtonsoft.Json;
 
 namespace L4U_DAL_DATA.Services
 {
+    /// <summary>
+    /// -----------------------------------------COMENTAR COM DIOGO ---------------------------------
+    /// </summary>
+
+
+
+
+
+    /// <summary>
+    /// -----------------------------------------COMENTAR COM DIOGO ---------------------------------
+    /// </summary>
+
     public class WeatherForecastService
     {
         public static async Task<ActionResult<WeatherForecast>> GetWeatherForecast()
@@ -14,7 +26,9 @@ namespace L4U_DAL_DATA.Services
                 // Call the external service to retrieve data
                 var apiKey = "ed5ed7bc164fca521c299430418089eb"; //Key of the api
                 var cityId = "2742032"; //Braga
-                var url = $"http://api.openweathermap.org/data/2.5/forecast?id={cityId}&appid={apiKey}";
+                var dt = DateTime.Now; //Actual Date
+                var url = $"http://api.openweathermap.org/data/2.5/forecast?id={cityId}&appid={apiKey}&dt={dt}&cnt={8}&lang=pt"; //url 
+                //https://api.openweathermap.org/data/2.5/forecast?id=2742032&appid=ed5ed7bc164fca521c299430418089eb&dt=2023-01-06T01:07:10Z
                 using (var client = new HttpClient())
                 {
                     var response = await client.GetStringAsync(url);
@@ -23,24 +37,11 @@ namespace L4U_DAL_DATA.Services
                     var forecast = JsonConvert.DeserializeObject<WeatherForecast>(response);
 
                     // Get the current date and time
-                    var now = DateTime.Now;
+                    //var now = DateTime.Now;
 
-                    // Filter the list of weather data by the current date
-                    var todayForecast = forecast.List
-                        .Where(data =>
-                        {
-                            var date = DateTimeOffset.FromUnixTimeSeconds(data.Dt).DateTime;
-                            return date.Year == now.Year && date.Month == now.Month && date.Day == now.Day;
-                        })
-                         .Select(data => new WeatherData
-                         {
-                             Dt = data.Dt,
-                             Main = data.Main,
-                             Weather = data.Weather
-                         })
-                            .ToList();
+                    var todayForecast = forecast.List;
 
-                    // Create a new WeatherForecast object with the City, Cod, Message, Cnt, and filtered list of weather data for the current day
+
                     var todayWeatherForecast = new WeatherForecast
                     {
                         City = forecast.City,
@@ -58,5 +59,7 @@ namespace L4U_DAL_DATA.Services
                 return null;
             }
         }
+
+
     }
 }

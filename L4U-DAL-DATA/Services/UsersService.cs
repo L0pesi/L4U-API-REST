@@ -1,12 +1,22 @@
-﻿using L4U_BOL_MODEL.Models;
+using L4U_BOL_MODEL.Models;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace L4U_DAL_DATA.Services
 {
+    /// <summary>
+    /// The Data Acess Layer Class of Users
+    /// </summary>
     public class UsersService
     {
 
+
+
+        /// <summary>
+        /// This Method gets all users from the database
+        /// </summary>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<List<User>> GetAllUsers(string connectString)
         {
             try
@@ -36,11 +46,13 @@ namespace L4U_DAL_DATA.Services
                 return users;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
         }
+
+
 
         /// <summary>
         /// This method adds a User to the database
@@ -76,11 +88,20 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
         }
+
+
+
+        /// <summary>
+        /// This method Authenticates a User on the Database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<User> Authenticate(UserAuth user, string connectString)
         {
             User authUser = new User();
@@ -117,12 +138,20 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
         }
 
+
+
+        /// <summary>
+        /// This method Updates info of a user on de Database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> UpdateUser(User user, string connectString)
         {
             try
@@ -150,12 +179,20 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
         }
 
+
+
+        /// <summary>
+        /// This method Deletes a User on the Database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<bool> DeleteUser(User user, string connectString)
         {
             try
@@ -178,11 +215,15 @@ namespace L4U_DAL_DATA.Services
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
         }
+
+
+
+        #region Material estudo - para implementação
 
         /*
         public void UpdateUser(User user)
@@ -320,6 +361,10 @@ namespace L4U_DAL_DATA.Services
         #endregion
 
         */
+
+        #endregion
+
+
 
     }
 }
