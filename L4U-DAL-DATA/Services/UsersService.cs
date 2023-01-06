@@ -110,9 +110,9 @@ namespace L4U_DAL_DATA.Services
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
 
-                    string addUser = " SELECT * FROM users  " +
+                    string addUser = " SELECT TOP 1 * FROM users  " +
                                      " WHERE " +
-                                     " email = @Email AND[password] = @Pass " +
+                                     " email = @Email " +
                                      " AND isActive = 1";
                     using (SqlCommand cmd = new SqlCommand(addUser))
                     {
@@ -123,16 +123,20 @@ namespace L4U_DAL_DATA.Services
                         cmd.Connection = conn;
 
                         cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 50).Value = user.Email;
-                        cmd.Parameters.Add("@Pass", SqlDbType.NVarChar, 50).Value = user.Password;
+                        //cmd.Parameters.Add("@Pass", SqlDbType.NVarChar, 50).Value = user.Password;
 
-                        var x = cmd.ExecuteScalar();
+                        using(DataTable dt = new DataTable())
+                        {
+                            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                            {
+                                da.Fill(dt);
+                            }
 
-                        //conn.Open();
-                        authUser = new User(x);
-                        //Console.WriteLine(cmd.ExecuteScalarAsync());
-                        //MessageBox.Show(x.GetType());
-                        var y = x.GetType();
+                            authUser = new User(dt.Rows[0]);
+                        }
+
                         conn.Close();
+
                         return authUser;
 
                     }

@@ -198,10 +198,10 @@ namespace L4U_BAL_SERVICES.Logic
 
 
         //COMENTAR----------------------------------------------
-        public static async Task<ResponseFunction> ChooseLocker(string connectionString, string userId, string lockerId)
+        public static async Task<ResponseFunction> ChooseLocker(string connectionString, string userId,string email, string lockerId)
         {
             LockersService service = new LockersService();
-            ResponseFunction response = await LockersService.ChooseLocker(connectionString, userId, lockerId);
+            ResponseFunction response = await LockersService.ChooseLocker(connectionString, userId, email, lockerId);
             if (response.StatusCode == StatusCodes.SUCCESS)
             {
                 return new ResponseFunction

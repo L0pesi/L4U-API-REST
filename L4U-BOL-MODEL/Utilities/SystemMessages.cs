@@ -20,7 +20,7 @@ namespace L4U_BOL_MODEL.Utilities
         public static readonly string RecordAdded = "Registo adicionado com sucesso.";
         public static readonly string RecordUpdated = "Registo atualizado com sucesso.";
         public static readonly string RecordDeleted = "Registo apagado com sucesso.";
-        public static readonly string USEREXISTS = "Username indisponível.";
+        public static readonly string USEREXISTS = "Sucesso.";
         public static readonly string UserDontExist = "Utilizador não registado.";
 
 
