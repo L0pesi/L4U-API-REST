@@ -1,5 +1,6 @@
 ﻿using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
+using L4U_DAL_DATA.Utilities;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -58,25 +59,19 @@ namespace L4U_DAL_DATA.Services
         }
 
 
-        //COMENTAR----------------------------------------------
+        /// <summary>
+        /// COMENTAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        /// </summary>
+        /// <param name="connectString"></param>
+        /// <param name="userId"></param>
+        /// <param name="email"></param>
+        /// <param name="lockerId"></param>
+        /// <returns></returns>
         public static async Task<ResponseFunction> ChooseLocker(string connectString, string userId, string email, string lockerId)
         {
             int rowsAffected = 0;
             string pinCode = string.Empty;
 
-            var config = new ConfigurationBuilder()
-                 .SetBasePath(Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json")
-                 .Build();
-            //var connectionString = config.GetConnectionString("ConnectionString");
-
-
-            SmtpClient smtpClient = new SmtpClient();
-            smtpClient.Host = "smtp.gmail.com";
-            smtpClient.Port = 587;
-            smtpClient.Credentials = new NetworkCredential(config.GetSection("EmailCredentials:Email").Value.ToString(), config.GetSection("EmailCredentials:Password").Value.ToString());
-
-            smtpClient.EnableSsl = true;
 
             try
             {
@@ -92,25 +87,51 @@ namespace L4U_DAL_DATA.Services
                     command.Parameters.AddWithValue("@UserId", userId);
 
                     rowsAffected = command.ExecuteNonQuery();
-                  
+
                     command.Dispose();
-                    if(rowsAffected.Equals(1))
+                    if (rowsAffected.Equals(1))
                     {
-                        //select à bd
+                        //select from database
+
                         sql = "Select pinCode FROM lockers WHERE id = @LockerId ";
                         command = new SqlCommand(sql, conn);
                         command.Parameters.AddWithValue("@LockerId", lockerId);
 
                         pinCode = (string)command.ExecuteScalar();
 
+                        // retrieve email from database
+                        sql = "Select email FROM users WHERE id = @UserId ";
+                        command = new SqlCommand(sql, conn);
+                        command.Parameters.AddWithValue("@UserId", userId);
+                        email = (string)command.ExecuteScalar();
+
+
+
                     }
 
                 }
 
-                if(rowsAffected.Equals(1) && !string.IsNullOrEmpty(pinCode))
+
+                if (rowsAffected.Equals(1) && !string.IsNullOrEmpty(pinCode) && !string.IsNullOrEmpty(email))
                 {
                     //sends email with pincode
+                    var smtpClient = EmailSender.GetSmtpClient();
+
+                    string subject = "Locker PinCode";
+                    string body = $"Your PinCode for locker {lockerId} is {pinCode}";
+
+                    MailMessage mailMessage = new MailMessage();
+
+                    mailMessage.From = new MailAddress("isitp2.2023@gmail.com");
+                    mailMessage.To.Add(email);
+                    mailMessage.Subject = subject;
+                    mailMessage.Body = body;
+
+                    smtpClient.Send(mailMessage);
                 }
+
+                return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS };
+
 
             }
             catch (Exception e)
