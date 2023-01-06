@@ -43,8 +43,6 @@ namespace L4U_BAL_SERVICES.Logic
                 Data = list.Value
             };
         }
-
-
     }
 }
 
