@@ -198,18 +198,18 @@ namespace L4U_DAL_DATA.Services
                 {
 
                     string addLocker = "INSERT INTO lockers " +
-                        "(id, pinCode, masterCode, lockerType) " + //Username, City) " +
+                        "(storeid, pinCode, masterCode, lockerType) " + //Username, City) " +
                         "VALUES " +
-                        "(@Id, @PinCode, @MasterCode, @LockerType)";
+                        "(@StoreId, @PinCode,@LockerType ,@LockerType)";
 
                     using (SqlCommand cmd = new SqlCommand(addLocker))
                     {
 
                         conn.Open();
                         cmd.Connection = conn;
-                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar).Value = locker.Id;
+                        cmd.Parameters.Add("@StoreId", SqlDbType.NVarChar).Value = locker.StoreId;
                         cmd.Parameters.Add("@PinCode", SqlDbType.NVarChar).Value = pinCode;
-                        cmd.Parameters.Add("@MasterCode", SqlDbType.NVarChar).Value = masterCode;
+                        cmd.Parameters.Add("@Mastercode", SqlDbType.NVarChar).Value = masterCode;
                         cmd.Parameters.Add("@LockerType", SqlDbType.NVarChar).Value = locker.LockerType;
 
                         int result = cmd.ExecuteNonQuery();
@@ -423,7 +423,7 @@ namespace L4U_DAL_DATA.Services
 
 
         //COMENTAR----------------------------------------------
-        public static async Task<List<Locker>> GetAllLockersFromStore(string connectString, string storeId)
+        public static async Task<List<Locker>> GetAllLockersFromStore(string connectString, string storeLockerId)
         {
             try
             {
@@ -433,7 +433,7 @@ namespace L4U_DAL_DATA.Services
                     using (SqlCommand cmd = new SqlCommand(getLockers))
                     {
                         cmd.Connection = conn;
-                        cmd.Parameters.AddWithValue("@StoreId", storeId);
+                        cmd.Parameters.AddWithValue("@StoreId", storeLockerId);
                         conn.Open();
                         SqlDataReader reader = cmd.ExecuteReader();
                         List<Locker> lockers = new List<Locker>();

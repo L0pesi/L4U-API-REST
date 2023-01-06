@@ -238,9 +238,9 @@ namespace L4U_BAL_SERVICES.Logic
 
 
         //COMENTAR----------------------------------------------
-        public static async Task<ResponseFunction> GetAllLockersFromStore(string connectString, string storeId)
+        public static async Task<ResponseFunction> GetAllLockersFromStore(string connectString, string storeLockerId)
         {
-            List<Locker> pList = await LockersService.GetAllLockersFromStore(connectString, storeId);
+            List<Locker> pList = await LockersService.GetAllLockersFromStore(connectString, storeLockerId);
 
             //string result = await UsersService.AddNewUser(user, connectString);
 
