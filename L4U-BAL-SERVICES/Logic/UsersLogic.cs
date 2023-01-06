@@ -121,7 +121,7 @@ namespace L4U_BAL_SERVICES.Logic
         {
             //string result = await UsersService.AddNewUser(user, connectString);
             if (!user.IsValid()) throw new Exception("Propriedades não intanciadas");
-
+            user.Password = Criptography.Encrypt(user.Password);
             ResponseFunction response = new ResponseFunction();
             try
             {
