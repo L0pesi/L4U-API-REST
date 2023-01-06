@@ -1,12 +1,14 @@
 ﻿using L4U_BAL_SERVICES.Logic;
 using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace L4U_WebService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class LockerController : ControllerBase
     {
 

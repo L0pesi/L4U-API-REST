@@ -1,5 +1,6 @@
 ﻿using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
+using L4U_DAL_DATA.Utilities;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -46,69 +47,82 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
-        public static async Task<ResponseFunction> ChooseLocker(string connectString, string userId, string lockerId)
+        /// <summary>
+        /// COMENTAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        /// </summary>
+        /// <param name="connectString"></param>
+        /// <param name="userId"></param>
+        /// <param name="email"></param>
+        /// <param name="lockerId"></param>
+        /// <returns></returns>
+        public static async Task<ResponseFunction> ChooseLocker(string connectString, string userId, string email, string lockerId)
         {
-            var config = new ConfigurationBuilder()
-                 .SetBasePath(Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json")
-                 .Build();
-            //var connectionString = config.GetConnectionString("ConnectionString");
-
-
-            SmtpClient smtpClient = new SmtpClient();
-            smtpClient.Host = "smtp.gmail.com";
-            smtpClient.Port = 587;
-            smtpClient.Credentials = new NetworkCredential(config.GetSection("EmailCredentials:Email").Value.ToString(), config.GetSection("EmailCredentials:Password").Value.ToString());
-
-            smtpClient.EnableSsl = true;
+            int rowsAffected = 0;
+            string pinCode = string.Empty;
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    string GetUser = "SELECT * FROM Users WHERE Id = @Id";
-                    using (SqlCommand cmd = new SqlCommand(GetUser))
+                    conn.Open();
+                    string sql = "UPDATE lockers SET lockerStatus = 1, " +
+                        " userId = @UserId " +
+                        "WHERE id = @LockerId ";
+
+                    SqlCommand command = new SqlCommand(sql, conn);
+                    command.Parameters.AddWithValue("@LockerId", lockerId);
+                    command.Parameters.AddWithValue("@UserId", userId);
+
+                    rowsAffected = command.ExecuteNonQuery();
+
+                    command.Dispose();
+                    if (rowsAffected.Equals(1))
                     {
-                        cmd.Connection = conn;
-                        cmd.Parameters.AddWithValue("@Id", userId);
+                        //select from database
+                        sql = "Select pinCode FROM lockers WHERE id = @LockerId ";
+                        command = new SqlCommand(sql, conn);
+                        command.Parameters.AddWithValue("@LockerId", lockerId);
 
-                        conn.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        if (reader.Read())
-                        {
-                            string email = reader.GetString(3);
-                            reader.Close();
-                            string GetLocker = "SELECT * FROM Lockers WHERE Id = @Id";
-                            cmd.CommandText = GetLocker;
-                            cmd.Parameters.Clear();
-                            cmd.Parameters.AddWithValue("@Id", lockerId);
+                        pinCode = (string)command.ExecuteScalar();
 
-                            reader = cmd.ExecuteReader();
-                            if (reader.Read())
-                            {
-                                string pinCode = reader.GetString(1);
+                        // retrieve email from database
+                        sql = "Select email FROM users WHERE id = @UserId ";
+                        command = new SqlCommand(sql, conn);
+                        command.Parameters.AddWithValue("@UserId", userId);
+                        email = (string)command.ExecuteScalar();
 
-                                string to = email;
-                                string subject = "Locker PinCode";
-                                string body = $"Your PinCode for locker {lockerId} is {pinCode}";
 
-                                MailMessage mailMessage = new MailMessage();
 
-                                mailMessage.From = new MailAddress("isitp2.2023@gmail.com");
-                                mailMessage.To.Add(to);
-                                mailMessage.Subject = subject;
-                                mailMessage.Body = body;
-
-                                smtpClient.Send(mailMessage);
-                            }
-                        }
-                        return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS };
                     }
+
                 }
+
+
+                if (rowsAffected.Equals(1) && !string.IsNullOrEmpty(pinCode) && !string.IsNullOrEmpty(email))
+                {
+                    //sends email with pincode
+                    var smtpClient = EmailSender.GetSmtpClient();
+
+                    string subject = "Locker PinCode";
+                    string body = $"Your PinCode for locker {lockerId} is {pinCode}";
+
+                    MailMessage mailMessage = new MailMessage();
+
+                    mailMessage.From = new MailAddress("isitp2.2023@gmail.com");
+                    mailMessage.To.Add(email);
+                    mailMessage.Subject = subject;
+                    mailMessage.Body = body;
+
+                    smtpClient.Send(mailMessage);
+                }
+
+                return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS };
+
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new ResponseFunction { StatusCode = L4U_BOL_MODEL.Utilities.StatusCodes.INTERNALSERVERERROR };
+
+                throw;
             }
         }
 
