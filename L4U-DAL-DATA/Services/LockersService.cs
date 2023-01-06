@@ -42,6 +42,8 @@ namespace L4U_DAL_DATA.Services
                             locker.PinCode = reader.GetString(1);
                             locker.MasterCode = reader.GetString(2);
                             locker.LockerType = reader.GetString(3);
+                            locker.LockerStatus = reader.GetBoolean(4);
+                            locker.LockerId = reader.GetString(5);
                             lockers.Add(locker);
                         }
                         return lockers;
@@ -175,6 +177,7 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
+
 
 
 
@@ -343,14 +346,14 @@ namespace L4U_DAL_DATA.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    string updateLocker = "Delete from lockers where id=@Id";
+                    string updateLocker = "Delete from lockers where LockerId=@Id";
                     using (SqlCommand cmd = new SqlCommand(updateLocker))
                     {
 
                         //cmd.CommandType = CommandType.Text;
 
                         cmd.Connection = conn;
-                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar).Value = locker.Id;
+                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar).Value = locker.LockerId;
                         conn.Open();
                         int result = cmd.ExecuteNonQuery();
                         conn.Close();
@@ -365,6 +368,44 @@ namespace L4U_DAL_DATA.Services
             }
         }
 
+
+
+        //COMENTAR----------------------------------------------
+        public static async Task<List<Locker>> GetAllLockersFromStore(string connectString, string storeId)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectString))
+                {
+                    string getLockers = "SELECT lockers.* FROM lockers INNER JOIN stores ON lockers.id = stores.id WHERE stores.id = @storeId";
+                    using (SqlCommand cmd = new SqlCommand(getLockers))
+                    {
+                        cmd.Connection = conn;
+                        cmd.Parameters.AddWithValue("@storeId", storeId);
+                        conn.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        List<Locker> lockers = new List<Locker>();
+                        while (reader.Read())
+                        {
+                            Locker locker = new Locker();
+                            locker.Id = reader.GetString(0);
+                            locker.PinCode = reader.GetString(1);
+                            locker.MasterCode = reader.GetString(2);
+                            locker.LockerType = reader.GetString(3);
+                            locker.LockerStatus = reader.GetBoolean(4);
+                            //locker.LockerId = reader.GetString(5);
+                            lockers.Add(locker);
+                        }
+                        return lockers;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // handle the exception here
+                return null;
+            }
+        }
 
         #region Material Estudo - Para implementação
 
@@ -395,6 +436,7 @@ namespace L4U_DAL_DATA.Services
         }*/
 
         #endregion
+
 
 
 

@@ -237,6 +237,18 @@ namespace L4U_BAL_SERVICES.Logic
 
 
 
+        //COMENTAR----------------------------------------------
+        public static async Task<ResponseFunction> GetAllLockersFromStore(string connectString, string storeId)
+        {
+            List<Locker> pList = await LockersService.GetAllLockersFromStore(connectString, storeId);
+
+            //string result = await UsersService.AddNewUser(user, connectString);
+
+            return BuildReponseFromList(pList);
+        }
+
+
+
         /// <summary>
         /// This is a generic method to build the response object from a response list
         /// </summary>

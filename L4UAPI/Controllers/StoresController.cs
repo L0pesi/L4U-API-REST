@@ -1,4 +1,4 @@
-﻿using L4U_BAL_SERVICES.Logic;
+using L4U_BAL_SERVICES.Logic;
 using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
 using L4U_BOL_MODEL.Utilities;
@@ -86,7 +86,7 @@ namespace L4U_WebService.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetAllUsers")]
+        [Route("GetAllStores")]
         public async Task<ResponseFunction> GetAllStores()
         {
             string cs = _configuration.GetConnectionString("conectorDb");
@@ -95,10 +95,10 @@ namespace L4U_WebService.Controllers
 
 
 
+
         #region Material de estudo - para implementar
 
         #endregion
-
 
 
     }

@@ -133,6 +133,17 @@ namespace L4U_WebService.Controllers
 
 
         //COMENTAR----------------------------------------------
+        [HttpGet]
+        [Route("GetAllLockersFromStore")]
+        public async Task<ResponseFunction> GetAllLockersFromStore(string storeId)
+        {
+            string cs = _configuration.GetConnectionString("conectorDb");
+            return await LockersLogic.GetAllLockersFromStore(cs, storeId);
+        }
+
+
+
+        //COMENTAR----------------------------------------------
         [HttpPost("ChooseLocker")]
         public async Task<IActionResult> ChooseLocker([FromBody] User user, [FromQuery] string lockerId)
         {

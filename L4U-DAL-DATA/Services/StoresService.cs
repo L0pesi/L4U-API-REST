@@ -81,7 +81,7 @@ namespace L4U_DAL_DATA.Services
 
                         cmd.Connection = conn;
 
-       cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
+                        cmd.Parameters.Add("Id", SqlDbType.NVarChar, 50).Value = store.Id;
                         cmd.Parameters.Add("@Address", SqlDbType.NVarChar, 50).Value = store.Address;
                         cmd.Parameters.Add("@City", SqlDbType.NVarChar, 50).Value = store.City;
                         cmd.Parameters.Add("@District", SqlDbType.NVarChar, 50).Value = store.District;
@@ -115,19 +115,26 @@ namespace L4U_DAL_DATA.Services
             {
                 using (SqlConnection conn = new SqlConnection(connectString))
                 {
-                    string updateLocker = "Delete from stores where id=@Id";
-                    using (SqlCommand cmd = new SqlCommand(updateLocker))
+                    string deleteLocker = "DELETE FROM lockers WHERE id = @Id";
+                    string deleteStore = "DELETE FROM stores WHERE id = @Id";
+
+                    using (SqlCommand cmd = new SqlCommand(deleteLocker, conn))
                     {
+                        cmd.Parameters.Add("@Id", SqlDbType.NVarChar, 50).Value = store.Id;
+                        conn.Open();
+                        int result = cmd.ExecuteNonQuery();                
+                        conn.Close();
+                    }
 
-
-                        cmd.Connection = conn;
+                    using (SqlCommand cmd = new SqlCommand(deleteStore, conn))
+                    {
                         cmd.Parameters.Add("@Id", SqlDbType.NVarChar, 50).Value = store.Id;
                         conn.Open();
                         int result = cmd.ExecuteNonQuery();
                         conn.Close();
-                        return result.Equals(1);
-
                     }
+
+                    return true;
                 }
             }
             catch (Exception)
@@ -135,6 +142,7 @@ namespace L4U_DAL_DATA.Services
                 return false;
             }
         }
+
 
 
 
@@ -178,10 +186,14 @@ namespace L4U_DAL_DATA.Services
         }
 
 
-        #region Material Estudo - para implementação
+        
+        }
+
+
+        #region Material Estudo - para implementaÃ§Ã£o
 
         #endregion
 
-
     }
-}
+    
+
