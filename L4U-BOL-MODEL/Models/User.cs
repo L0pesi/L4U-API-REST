@@ -6,6 +6,8 @@ namespace L4U_BOL_MODEL.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+
+        public bool isActive { get; set; }
         // string UserName { get; set; }
         //public string City { get; set; }
 

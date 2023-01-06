@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using L4U_BOL_MODEL.Models;
+﻿using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
 using L4U_BOL_MODEL.Utilities;
 using L4U_DAL_DATA.Services;
-using Microsoft.Extensions.Logging;
 
 namespace L4U_BAL_SERVICES.Logic
 {
@@ -60,7 +52,7 @@ namespace L4U_BAL_SERVICES.Logic
 
         public static async Task<ResponseFunction> OpenLocker(Locker locker, string connectString)
         {
-            
+
             ResponseFunction response = new ResponseFunction();
             try
             {
@@ -147,7 +139,7 @@ namespace L4U_BAL_SERVICES.Logic
             return response;
         }
 
-        
+
 
         public static async Task<ResponseFunction> DeleteLocker(Locker locker, string connectString)
         {
@@ -162,6 +154,37 @@ namespace L4U_BAL_SERVICES.Logic
                 };
             return StandardResponse.Error();
         }
+
+
+
+
+        public static async Task<ResponseFunction> ChooseLocker(string connectionString, string userId, string lockerId)
+        {
+            LockersService service = new LockersService();
+            ResponseFunction response = await LockersService.ChooseLocker(connectionString, userId, lockerId);
+            if (response.StatusCode == StatusCodes.SUCCESS)
+            {
+                return new ResponseFunction
+                {
+                    StatusCode = StatusCodes.SUCCESS,
+                    Data = null
+                };
+            }
+            else
+            {
+                return new ResponseFunction
+                {
+                    StatusCode = StatusCodes.NOCONTENT,
+                    Data = null
+                };
+            }
+        }
+
+
+
+
+
+
 
         /// <summary>
         /// This method calls the necessary service to get all productStore and based on the response, builds up the response

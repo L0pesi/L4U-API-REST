@@ -2,6 +2,7 @@
 using L4U_BOL_MODEL.Models;
 using L4U_BOL_MODEL.Response;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace L4U_WebService.Controllers
 {
@@ -21,7 +22,6 @@ namespace L4U_WebService.Controllers
         [HttpPost("AddNewLocker")]
         public async Task<IActionResult> AddNewLocker(Locker locker)
         {
-            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
             string cs = _configuration.GetConnectionString("conectorDb");
             ResponseFunction response = await LockersLogic.AddNewLocker(locker, cs);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
@@ -34,7 +34,6 @@ namespace L4U_WebService.Controllers
         [HttpPut("OpenLocker")]
         public async Task<IActionResult> OpenLocker(Locker locker)
         {
-            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
             string cs = _configuration.GetConnectionString("conectorDb");
             ResponseFunction response = await LockersLogic.OpenLocker(locker, cs);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
@@ -47,7 +46,6 @@ namespace L4U_WebService.Controllers
         [HttpPut("CloseLocker")]
         public async Task<IActionResult> CloseLocker(Locker locker)
         {
-            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
             string cs = _configuration.GetConnectionString("conectorDb");
             ResponseFunction response = await LockersLogic.OpenLocker(locker, cs);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
@@ -60,7 +58,6 @@ namespace L4U_WebService.Controllers
         [HttpPut("UpdateLockerById")]
         public async Task<IActionResult> UpdateLocker(Locker locker)
         {
-            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
             string cs = _configuration.GetConnectionString("conectorDb");
             ResponseFunction response = await LockersLogic.UpdateLocker(locker, cs);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
@@ -73,7 +70,6 @@ namespace L4U_WebService.Controllers
         [HttpDelete("DeleteLocker")]
         public async Task<IActionResult> DeleteLocker(Locker locker)
         {
-            //string connectString = "Server=l4u.database.windows.net;Database=L4U;User Id=supergrupoadmin;Password=supergrupo+2022";
             string cs = _configuration.GetConnectionString("conectorDb");
             ResponseFunction response = await LockersLogic.DeleteLocker(locker, cs);
             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
@@ -94,5 +90,33 @@ namespace L4U_WebService.Controllers
             string cs = _configuration.GetConnectionString("conectorDb");
             return await LockersLogic.GetAllLockers(cs);
         }
+
+
+        [HttpPost("ChooseLocker")]
+        public async Task<IActionResult> ChooseLocker([FromBody] User user, [FromQuery] string lockerId)
+        {
+            string connectionString = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await LockersLogic.ChooseLocker(connectionString, user.Id, lockerId);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
+
+
+        /* [HttpPost("AddNewLocker")]
+         public async Task<IActionResult> AddNewLocker(Locker locker)
+         {
+             string cs = _configuration.GetConnectionString("conectorDb");
+             ResponseFunction response = await LockersLogic.AddNewLocker(locker, cs);
+             if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+             {
+                 return StatusCode((int)response.StatusCode);
+             }
+             return new JsonResult(response);
+         }
+        */
+
     }
-}
+    }
