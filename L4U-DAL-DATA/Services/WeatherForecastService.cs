@@ -4,6 +4,18 @@ using Newtonsoft.Json;
 
 namespace L4U_DAL_DATA.Services
 {
+    /// <summary>
+    /// -----------------------------------------COMENTAR COM DIOGO ---------------------------------
+    /// </summary>
+
+
+
+
+
+    /// <summary>
+    /// -----------------------------------------COMENTAR COM DIOGO ---------------------------------
+    /// </summary>
+
     public class WeatherForecastService
     {
         public static async Task<ActionResult<WeatherForecast>> GetWeatherForecast()
@@ -58,5 +70,7 @@ namespace L4U_DAL_DATA.Services
                 return null;
             }
         }
+
+
     }
 }

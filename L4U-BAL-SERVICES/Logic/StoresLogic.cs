@@ -12,24 +12,19 @@ using L4U_DAL_DATA.Utilities;
 
 namespace L4U_BAL_SERVICES.Logic
 {
+    /// <summary>
+    /// The Business Acess Layer Class of Stores
+    /// </summary>
     public class StoresLogic
     {
-        /*
-        private readonly StoresService _storeService;
 
-        public StoresLogic()
-        {
 
-            _storeService = new StoresService();
-
-        }
-        */
 
         /// <summary>
-        /// This method calls the necessary service to get all productStore and based on the response, builds up the response
+        /// This method Gets information of all Stores
         /// </summary>
-        /// <param name="appPath">Application path</param>
-        /// <returns>List of products</returns>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<ResponseFunction> GetAllStores(string connectString)
         {
             List<Store> pList = await StoresService.GetAllStores(connectString);
@@ -37,6 +32,8 @@ namespace L4U_BAL_SERVICES.Logic
 
             return BuildReponseFromList(pList);
         }
+
+
 
         /// <summary>
         /// This is a generic method to build the response object from a response list
@@ -70,6 +67,13 @@ namespace L4U_BAL_SERVICES.Logic
 
 
 
+        /// <summary>
+        /// This method Adds a new store to the Database
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static async Task<ResponseFunction> AddNewStore(Store store, string connectString)
         {
             //string result = await UsersService.AddNewUser(user, connectString);
@@ -101,6 +105,14 @@ namespace L4U_BAL_SERVICES.Logic
             return response;
         }
 
+
+
+        /// <summary>
+        /// This method Updates a Store in the Database
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<ResponseFunction> UpdateStore(Store store, string connectString)
         {
             bool b = await StoresService.UpdateStore(store, connectString);
@@ -114,9 +126,15 @@ namespace L4U_BAL_SERVICES.Logic
                 };
             return StandardResponse.Error();
         }
- 
 
 
+
+        /// <summary>
+        /// This method is to Delete a Store from the Database
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="connectString"></param>
+        /// <returns></returns>
         public static async Task<ResponseFunction> DeleteStore(Store store, string connectString)
         {
             bool b = await StoresService.DeleteStore(store, connectString);
@@ -130,6 +148,26 @@ namespace L4U_BAL_SERVICES.Logic
                 };
             return StandardResponse.Error();
         }
+
+
+
+        #region Material Estudo - Para implementação
+
+        /*
+        private readonly StoresService _storeService;
+
+        public StoresLogic()
+        {
+
+            _storeService = new StoresService();
+
+        }
+        */
+
+        #endregion
+
+
+
     }
 }
 

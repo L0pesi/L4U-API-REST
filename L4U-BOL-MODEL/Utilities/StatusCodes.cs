@@ -8,7 +8,7 @@ namespace L4U_BOL_MODEL.Utilities
 {
 
     /// <summary>
-    /// Libraria para os status codes
+    /// Library for status codes
     /// </summary>
     public enum StatusCodes
     {
