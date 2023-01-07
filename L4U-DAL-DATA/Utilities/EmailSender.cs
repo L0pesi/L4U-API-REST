@@ -7,6 +7,10 @@ namespace L4U_DAL_DATA.Utilities
     public class EmailSender
     {
 
+        /// <summary>
+        /// This Method open the SMTP Client of the Admin Acount in Gmail
+        /// </summary>
+        /// <returns></returns>
         public static SmtpClient GetSmtpClient()
         {
             var config = new ConfigurationBuilder()

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace L4U_BAL_SERVICES.Logic
 {
     /// <summary>
-    /// ----------------------------------------- COMENTAR COM DIOGO ------------------------------
+    /// This Class manages the extern WebService
     /// </summary>
     public class WeatherForecastLogic
     {
@@ -15,7 +15,7 @@ namespace L4U_BAL_SERVICES.Logic
 
 
         /// <summary>
-        /// ----------------------------------------- COMENTAR COM DIOGO ------------------------------
+        /// This Method returns list of wheather info from the city of Braga using external services
         /// </summary>
         /// <returns></returns>
         public static async Task<ResponseFunction> GetWeatherForecast()
@@ -29,7 +29,7 @@ namespace L4U_BAL_SERVICES.Logic
 
 
         /// <summary>
-        /// ----------------------------------------- COMENTAR COM DIOGO ------------------------------
+        /// This method builds the response from a list
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>

@@ -5,17 +5,14 @@ using Newtonsoft.Json;
 namespace L4U_DAL_DATA.Services
 {
     /// <summary>
-    /// -----------------------------------------COMENTAR COM DIOGO ---------------------------------
+    /// This Class manages the extern WebService
     /// </summary>
-
-
 
 
 
     /// <summary>
-    /// -----------------------------------------COMENTAR COM DIOGO ---------------------------------
+    /// This Method returns list of wheather info from the city of Braga using external services
     /// </summary>
-
     public class WeatherForecastService
     {
         public static async Task<ActionResult<WeatherForecast>> GetWeatherForecast()

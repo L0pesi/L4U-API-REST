@@ -58,7 +58,7 @@ namespace L4U_DAL_DATA.Services
 
 
         /// <summary>
-        /// This method Udates a Store in the Database
+        /// This method Updates a Store in the Database
         /// </summary>
         /// <param name="store"></param>
         /// <param name="connectString"></param>

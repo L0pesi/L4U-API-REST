@@ -12,7 +12,7 @@ namespace L4U_WebService.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class LockerController : ControllerBase
     {
 
@@ -64,6 +64,82 @@ namespace L4U_WebService.Controllers
 
 
 
+        /// <summary>
+        /// This is the controller of DeleteLocker Method
+        /// </summary>
+        /// <param name="locker"></param>
+        /// <returns></returns>
+        [HttpDelete("DeleteLocker")]
+        public async Task<IActionResult> DeleteLocker(Locker locker)
+        {
+            string cs = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await LockersLogic.DeleteLocker(locker, cs);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
+
+
+
+        /// <summary>
+        /// This controller method retrives all Lockers
+        /// </summary>
+        /// <returns>List of Lockers</returns>
+        [HttpGet]
+        [Route("GetAllLockers")]
+        public async Task<ResponseFunction> GetAllLockers()
+        {
+            string cs = _configuration.GetConnectionString("conectorDb");
+            return await LockersLogic.GetAllLockers(cs);
+        }
+
+
+
+        /// <summary>
+        /// This method returns a list of lockers from a specific store id
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetAllLockersFromStore")]
+        public async Task<ResponseFunction> GetAllLockersFromStore([FromQuery] RequestStoreIdModel request)
+        {
+            string cs = _configuration.GetConnectionString("conectorDb");
+            return await LockersLogic.GetAllLockersFromStore(cs, request.StoreId);
+        }
+
+
+
+
+        /// <summary>
+        /// This is the method for ChooseLocker
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="lockerId"></param>
+        /// <returns></returns>
+        /// <remarks>This method selects a locker by the userId and lockerId parameter and sets lockerStatus to 1 if is 0 
+        /// and sends a email to the associated userId  email, with the following message:
+        /// "Your PinCode for the locker {lockerId} is {pinCode}". This method for now only works with gmail
+        /// emails. The lockerStatus 1 represent's when the locker ocupancy/lockerIsClose and 0 the locker 
+        /// availabily/lockerIsOpen.</remarks>
+        [HttpPost("ChooseLocker/{lockerId}")]
+        public async Task<IActionResult> ChooseLocker([FromBody] User user, [FromRoute] string lockerId)
+        {
+            string connectionString = _configuration.GetConnectionString("conectorDb");
+            ResponseFunction response = await LockersLogic.ChooseLocker(connectionString, user.Id, user.Email, lockerId);
+            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
+            {
+                return StatusCode((int)response.StatusCode);
+            }
+            return new JsonResult(response);
+        }
+
+
+        #region Material de estudo - para implementar
+
+
         ///// <summary>
         ///// This is the controller of the Method that gives information about the closure of the locker
         ///// When it is close it's state is 1 
@@ -101,66 +177,6 @@ namespace L4U_WebService.Controllers
         //    return new JsonResult(response);
         //}
 
-
-
-        /// <summary>
-        /// This is the controller of DeleteLocker Method
-        /// </summary>
-        /// <param name="locker"></param>
-        /// <returns></returns>
-        [HttpDelete("DeleteLocker")]
-        public async Task<IActionResult> DeleteLocker(Locker locker)
-        {
-            string cs = _configuration.GetConnectionString("conectorDb");
-            ResponseFunction response = await LockersLogic.DeleteLocker(locker, cs);
-            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
-            {
-                return StatusCode((int)response.StatusCode);
-            }
-            return new JsonResult(response);
-        }
-
-
-
-        /// <summary>
-        /// This controller method retrives all Lockers
-        /// </summary>
-        /// <returns>List of Lockers</returns>
-        [HttpGet]
-        [Route("GetAllLockers")]
-        public async Task<ResponseFunction> GetAllLockers()
-        {
-            string cs = _configuration.GetConnectionString("conectorDb");
-            return await LockersLogic.GetAllLockers(cs);
-        }
-
-
-        //COMENTAR----------------------------------------------
-        [HttpGet]
-        [Route("GetAllLockersFromStore")]
-        public async Task<ResponseFunction> GetAllLockersFromStore([FromQuery] RequestStoreIdModel request)
-        {
-            string cs = _configuration.GetConnectionString("conectorDb");
-            return await LockersLogic.GetAllLockersFromStore(cs, request.StoreId);
-        }
-
-
-
-        //COMENTAR----------------------------------------------
-        [HttpPost("ChooseLocker/{lockerId}")]
-        public async Task<IActionResult> ChooseLocker([FromBody] User user, [FromRoute] string lockerId)
-        {
-            string connectionString = _configuration.GetConnectionString("conectorDb");
-            ResponseFunction response = await LockersLogic.ChooseLocker(connectionString, user.Id, user.Email, lockerId);
-            if (response.StatusCode != L4U_BOL_MODEL.Utilities.StatusCodes.SUCCESS)
-            {
-                return StatusCode((int)response.StatusCode);
-            }
-            return new JsonResult(response);
-        }
-
-
-        #region Material de estudo - para implementar
 
         #endregion
 

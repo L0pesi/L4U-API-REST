@@ -76,10 +76,6 @@ namespace L4U_WebService.Controllers
         }
 
 
-        #region LOGIN METHOD - TRIAL VERSION
-
-        #endregion
-
 
         /// <summary>
         /// This is the controller of DeleteUser Method
@@ -135,13 +131,26 @@ namespace L4U_WebService.Controllers
         }
 
 
-        #region Ideias AF
 
-        //inativar user => definir o bit isActive = 0
-
-        //Login => WHERE isActive = 1
-
-        #endregion
+        /// <summary>
+        /// This method generates the token
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private string GenerateJwtToken(User user)
+        {
+            // generate token that is valid for 7 days
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(appSettings.SecretCode);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
 
 
         #region Codigo antigo com material de estudo
@@ -249,35 +258,6 @@ namespace L4U_WebService.Controllers
         
         #endregion
         */
-
-        #endregion
-
-
-        #region Generate Token - Implementar Mais tarde
-
-
-
-        /// <summary>
-        /// This method generates the token
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        private string GenerateJwtToken(User user)
-        {
-            // generate token that is valid for 7 days
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(appSettings.SecretCode);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-
-
 
         #endregion
 
